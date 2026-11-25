@@ -1,0 +1,63 @@
+Q: How do I create an account?
+A: Open the site and choose Register. Pick whether you are a Customer or a Farmer, then enter your name, mobile number, a password of at least 8 characters and your 6-digit pincode. Farmers also enter their farm name and share the farm's location. After that you can log in with your mobile number and password.
+
+Q: Who can sell on this site?
+A: Only registered farmers. Every product on the site is listed by a farmer through their own account, and nobody else can change a farmer's products.
+
+Q: How do I see products near me?
+A: Allow location access when the browser asks, or type your pincode in the pincode box on the Shop page. Products from the nearest farms are shown first and the farthest farms last. Each product shows how far away the farm is.
+
+Q: How do I search by pincode?
+A: Type a 6-digit pincode in the pincode box on the Shop page. Products are ordered by distance from the centre of that pincode. If the site does not know where that pincode is, it shows farms with the most similar pincode first.
+
+Q: How does searching for a product work?
+A: Type a product, farm or place name in the search box. Results keep the same order as the shop: the nearest farm first and the farthest last.
+
+Q: Is my location stored or shared?
+A: Your position is used to sort products and is not saved. A customer's home location is never stored. A farm's exact location is never shown to other users, only the distance.
+
+Q: How do I add items to my cart and place an order?
+A: Press + on a product to add it to your cart, open the Cart tab, enter your delivery address and pincode, and press Place order. If your cart has products from more than one farmer, one order is created for each farmer. Your bill is shown straight away.
+
+Q: How do I pay?
+A: There is no online payment on this site. You pay the farmer directly when you receive your order, by cash or UPI, as agreed with the farmer.
+
+Q: What is the delivery OTP?
+A: When the farmer sets off with your order, you get a 6-digit OTP in your My Orders page (and by SMS if the site has an SMS gateway set up). When the order reaches you, tell the OTP to the farmer. The farmer enters it, and that closes the deal. Do not share the OTP before you have received your order.
+
+Q: What if the farmer enters the wrong OTP?
+A: The farmer has 5 tries. After that the order is locked until you press New OTP on your order. The farmer cannot close the order without your OTP.
+
+Q: How does a farmer close an order?
+A: The farmer accepts the order, presses Out for delivery, delivers it, asks the customer for the OTP, enters it and presses Complete delivery. The order is then Delivered and the final bill is available.
+
+Q: Where do I find my bill?
+A: Your bill is shown right after you place an order. Open My Orders and press View bill any time. The bill lists each item, quantity, rate, amount, the total, the farm and the order status. You can print it.
+
+Q: Can I cancel an order?
+A: Customers can cancel while the order is Placed or Accepted. Farmers can cancel until it is delivered. Cancelling puts the stock back.
+
+Q: How can a farmer add a product?
+A: Log in as a farmer, open My Products, enter the product name, category, price, unit (kg, dozen, litre and so on) and the quantity available, add a photo if you like, and press Add product. It appears for customers straight away, without them reloading the page.
+
+Q: Can farmers add photos?
+A: Yes. Pick a photo when adding a product, or press Change photo on an existing product. JPEG, PNG and WebP are accepted, up to 1.5 MB after the page shrinks it.
+
+Q: Can a farmer change a price or stock?
+A: Yes. In My Products change the price or quantity and press Save. Customers see the new price immediately. Set a product to Hidden to stop selling it for now.
+
+Q: What is the price reference for farmers?
+A: When a farmer types a product name and unit, the site looks up similar products listed by other farmers and shows the lowest, middle and highest price per unit, plus an indicative reference range. It also tells you whether your price is below, within or above that range. The reference range is a rough guide, not live market data.
+
+Q: Why is the product list empty?
+A: Products appear only when farmers list them. If nothing shows, no farmer has listed a product yet, or nothing matches your search, or your distance filter is too small.
+
+Q: What does the chat assistant do?
+A: It answers questions about products, prices, farms, ordering and delivery using the market's own live listings, and can tell you which farms are close to you. It runs on a local AI model and does not need internet.
+
+Q: Do you deliver outside the city?
+A: Each farmer decides what they can deliver. The site shows the distance to each farm and an estimated delivery time. Check the farmer's phone number on your order if you are unsure.
+
+Q: Is there a discount for bulk orders?
+A: The site has no built-in discounts. You can ask the farmer.
+

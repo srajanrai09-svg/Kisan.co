@@ -1,0 +1,32 @@
+# Starts PostGIS, Redis, Ollama and OSRM. The Python API runs on your machine (see README.md).
+# Already have Ollama installed on Windows? Delete the "ollama" service below and use your own.
+services:
+  postgis:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: market
+      POSTGRES_PASSWORD: market
+      POSTGRES_DB: market
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  ollama:
+    image: ollama/ollama
+    ports: ["11434:11434"]
+    volumes: ["ollama:/root/.ollama"]
+
+  # Needs the prepared map files in ./osrm-data (README, step 3). Remove this service to run without road routing.
+  osrm:
+    image: osrm/osrm-backend
+    command: osrm-routed --algorithm mld /data/region.osrm
+    ports: ["5000:5000"]
+    volumes: ["./osrm-data:/data"]
+
+volumes:
+  pgdata:
+  ollama:
+

@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kisan.co – Local Farmer Market</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root{--green:#2e7d32;--green-d:#1b5e20;--light:#e8f5e9;--ink:#1b1b1b;--muted:#666;--card:#fff;--bg:#f6f8f4;--line:#e3e8e0;--warn:#b71c1c;--amber:#b26a00}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+  header{background:var(--green);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  header h1{margin:0;font-size:1.2rem}
+  .brand small{display:block;font-size:.78rem;opacity:.9}
+  nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  nav button{background:transparent;border:1px solid #fff;color:#fff;padding:7px 14px;border-radius:20px;cursor:pointer;font-size:.95rem}
+  nav button.active{background:#fff;color:var(--green)}
+  .badge{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:#ffd54f;color:#333;font-size:.75rem;text-align:center;margin-left:4px}
+  #userChip{font-size:.85rem;display:flex;align-items:center;gap:8px}
+  #userChip button{padding:5px 11px;font-size:.82rem}
+  #liveDot{width:9px;height:9px;border-radius:50%;background:#bbb;display:inline-block}
+  #liveDot.on{background:#69f0ae;box-shadow:0 0 6px #69f0ae}
+  main{max-width:1100px;margin:0 auto;padding:16px}
+  .hidden{display:none!important}
+  input,select,textarea{padding:10px;border:1px solid #c9d1c6;border-radius:8px;font-size:1rem;background:#fff;font-family:inherit;max-width:100%}
+  input:focus,select:focus,textarea:focus{outline:2px solid #81c784;border-color:var(--green)}
+  label{display:block;font-size:.88rem;color:#333;margin-bottom:4px}
+  .btn{background:var(--green);color:#fff;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:1rem}
+  .btn:hover{background:var(--green-d)}
+  .btn:disabled{opacity:.55;cursor:default}
+  .btn.small{padding:7px 12px;font-size:.88rem}
+  .btn.ghost{background:#fff;color:var(--green);border:1px solid var(--green)}
+  .btn.danger{background:#fff;color:var(--warn);border:1px solid var(--warn)}
+  .panel{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:14px}
+  .muted{color:var(--muted);font-size:.9rem}
+  .err{color:var(--warn);font-size:.92rem;min-height:1.2em;margin:6px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .card{background:#fff;border-radius:12px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:5px}
+  .card h3{margin:2px 0 0;font-size:1.05rem}
+  .photo,.noimg{width:100%;height:150px;border-radius:8px}
+  .photo{object-fit:cover;display:block;background:var(--light)}
+  .noimg{background:var(--light);display:flex;align-items:center;justify-content:center;font-size:2.8rem}
+  .farm{color:var(--muted);font-size:.85rem}
+  .price{font-weight:700;color:var(--green);font-size:1.05rem}
+  .tag{display:inline-block;background:var(--light);color:var(--green);font-size:.74rem;padding:2px 8px;border-radius:10px;margin-right:3px}
+  .tag.amber{background:#fff3e0;color:var(--amber)}
+  .qty{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:6px}
+  .qty button{width:32px;height:32px;border-radius:50%;border:1px solid var(--green);background:#fff;color:var(--green);font-size:1.1rem;cursor:pointer}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .toolbar input[type=search]{flex:1;min-width:180px}
+  #pinBox{width:140px}
+  .status{padding:8px 12px;background:var(--light);border-radius:8px;font-size:.9rem;margin-bottom:12px}
+  .status.warn{background:#fff3e0}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eee;flex-wrap:wrap}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.cols{grid-template-columns:1fr}}
+  form.stack{display:grid;gap:12px;max-width:560px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px}
+  .tabs button{flex:1;padding:9px;border:1px solid var(--green);background:#fff;color:var(--green);border-radius:8px;cursor:pointer;font-size:1rem}
+  .tabs button.on{background:var(--green);color:#fff}
+  /* login / register: a drawer at the side */
+  #guestChip{display:flex;gap:8px;align-items:center}
+  #guestChip button{background:transparent;border:1px solid #fff;color:#fff;padding:7px 14px;border-radius:20px;cursor:pointer;font-size:.95rem}
+  #guestChip button.solid{background:#fff;color:var(--green);font-weight:600}
+  #authOverlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:90}
+  #auth{position:fixed;top:0;right:0;bottom:0;width:430px;max-width:100vw;background:var(--bg);z-index:95;overflow-y:auto;padding:16px;box-shadow:-6px 0 24px rgba(0,0,0,.25);transform:translateX(105%);transition:transform .22s ease;visibility:hidden}
+  #auth.open{transform:none;visibility:visible}
+  #auth .drawerHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  #auth .drawerHead button{background:none;border:0;font-size:1.4rem;cursor:pointer;color:var(--muted)}
+  .guestNote{background:#fffde7;border:1px solid #fff59d;border-radius:8px;padding:8px 12px;font-size:.9rem;margin-bottom:12px}
+  /* orders */
+  .order{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px;background:#fff}
+  .order .top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+  .st{padding:3px 10px;border-radius:12px;font-size:.8rem;font-weight:600}
+  .st.placed{background:#fff3e0;color:var(--amber)} .st.accepted{background:#e3f2fd;color:#0d47a1}
+  .st.out_for_delivery{background:#ede7f6;color:#4527a0} .st.delivered{background:var(--light);color:var(--green-d)}
+  .st.cancelled{background:#fdecea;color:var(--warn)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+  .otpbox{background:#ede7f6;border-radius:10px;padding:12px;margin-top:10px;text-align:center}
+  .otpnum{font-size:2rem;letter-spacing:.35em;font-weight:700;color:#311b92;padding-left:.35em}
+  .otpin{width:150px;letter-spacing:.3em;text-align:center;font-size:1.1rem}
+  /* price reference */
+  #priceRef{border:1px dashed #81c784;border-radius:10px;padding:12px;background:#f9fdf9}
+  .bar{position:relative;height:10px;border-radius:5px;background:linear-gradient(90deg,#c8e6c9,#a5d6a7);margin:18px 6px 8px}
+  .bar i{position:absolute;top:-5px;width:4px;height:20px;border-radius:2px;background:#1b5e20}
+  .bar.out i{background:var(--warn)}
+  .rng{display:flex;justify-content:space-between;font-weight:700}
+  /* my products */
+  .mp{display:grid;grid-template-columns:60px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+  .mp img,.mp .noimg{width:60px;height:60px;border-radius:8px;object-fit:cover;font-size:1.6rem}
+  .mp .ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}
+  .mp .ctl input{width:90px;padding:6px}
+  /* bill */
+  #billModal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;overflow:auto;padding:16px}
+  .bill{background:#fff;max-width:640px;margin:0 auto 16px;border-radius:10px;padding:20px;position:relative}
+  .bill h2{margin:0 0 2px;color:var(--green-d)}
+  .bill table{width:100%;border-collapse:collapse;margin:10px 0}
+  .bill th,.bill td{padding:6px 4px;border-bottom:1px solid #eee;text-align:left;font-size:.92rem}
+  .bill td.n,.bill th.n{text-align:right}
+  .bill .tot td{font-weight:700;font-size:1.05rem;border-top:2px solid #333}
+  .stamp{position:absolute;right:18px;top:18px;border:2px solid;border-radius:6px;padding:2px 10px;font-weight:700;transform:rotate(6deg);font-size:.85rem}
+  .stamp.delivered{color:var(--green);border-color:var(--green)} .stamp.cancelled{color:var(--warn);border-color:var(--warn)}
+  .stamp.open{color:var(--amber);border-color:var(--amber)}
+  .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#263238;color:#fff;padding:10px 16px;border-radius:8px;z-index:200;max-width:90vw}
+  /* chat */
+  #chatBtn{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:var(--green);color:#fff;font-size:1.6rem;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.3);z-index:50}
+  #chatBox{position:fixed;right:18px;bottom:88px;width:340px;max-width:calc(100vw - 36px);height:460px;max-height:calc(100vh - 110px);background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden;z-index:50}
+  #chatBox.open{display:flex}
+  #chatHead{background:var(--green);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+  #chatHead button{background:none;border:0;color:#fff;font-size:1.2rem;cursor:pointer}
+  #chatLog{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+  .msg{max-width:85%;padding:8px 12px;border-radius:12px;white-space:pre-wrap;word-wrap:break-word;font-size:.92rem}
+  .msg.user{align-self:flex-end;background:var(--green);color:#fff}
+  .msg.bot{align-self:flex-start;background:#fff;border:1px solid #ddd}
+  .msg.bad{align-self:flex-start;background:#fdecea;color:var(--warn)}
+  #chatForm{display:flex;gap:6px;padding:10px;border-top:1px solid #eee}
+  #chatForm input{flex:1;min-width:0}
+  footer{text-align:center;color:var(--muted);font-size:.8rem;padding:18px}
+  @media print{
+    body>*:not(#billModal){display:none!important}
+    #billModal{position:static;background:none;padding:0}
+    .bill{box-shadow:none;margin:0 0 20px;page-break-after:always}
+    .noprint{display:none!important}
+  }
+
+  /* ===== Kisan.co skin ===== */
+  :root{--green:#1c1814;--green-d:#000;--light:#f1ede6;--ink:#1c1814;--muted:#6b645c;--bg:#faf8f5;--line:#e4dfd6}
+  body{font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;line-height:1.5}
+  h1,h2,h3,.brand h1,.bill h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400}
+  .announce{background:#1c1814;color:#f3efe8;text-align:center;font-size:.82rem;padding:8px 10px}
+  header{background:#faf8f5;color:#1c1814;border-bottom:1px solid var(--line);padding:14px 24px}
+  header h1{font-size:1.9rem;line-height:1}.brand small{color:var(--muted);opacity:1}
+  nav button,#guestChip button{border:1px solid #1c1814;color:#1c1814}
+  nav button.active,#guestChip button.solid{background:#1c1814;color:#fff}
+  #logoutBtn{color:#1c1814!important;border-color:#1c1814!important}
+  .badge{background:#1c1814;color:#fff}
+  .btn{border-radius:99px;padding:11px 22px;font-weight:500}.btn.small{padding:8px 16px}
+  .btn.ghost{background:transparent;color:#1c1814;border:1px solid #1c1814}.btn.ghost:hover{background:#f1ede6}
+  .panel,.card,.order,.bill{border-radius:14px;box-shadow:none;border:1px solid var(--line)}
+  .card .photo,.card .noimg{height:190px;border-radius:10px}.card h3{font-size:1.35rem}
+  .price{color:#1c1814;font-size:1.15rem}.tag{background:#f1ede6;color:#1c1814}
+  .qty button{border-color:#1c1814;color:#1c1814}
+  .tabs button{border-color:#1c1814;color:#1c1814}.tabs button.on{background:#1c1814;color:#fff}
+  .st.delivered{background:#e6f2e6;color:#1b5e20}.stamp.delivered{color:#1b5e20;border-color:#1b5e20}
+  input:focus,select:focus,textarea:focus{outline:2px solid #c9bfae;border-color:#1c1814}
+  .toolbar input,.toolbar select{border-radius:99px;padding:11px 18px}
+  #chatBtn,#chatHead,.msg.user{background:#1c1814}
+  .hero{min-height:360px;border-radius:16px;margin:0 0 22px;color:#fff;display:flex;align-items:flex-end;padding:34px;background:linear-gradient(90deg,rgba(12,10,8,.65),rgba(12,10,8,.15) 65%),url(/img/hero.jpg) center/cover}
+  .hero .eb{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px}
+  .hero h2{font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;margin:0 0 12px;color:#fff}
+  .hero p{max-width:480px;margin:0 0 16px;font-size:1.05rem}
+  .hero .btn{background:#fff;color:#1c1814}
+  footer{border-top:1px solid var(--line);margin-top:30px}
+  .card{cursor:pointer;transition:transform .16s ease,border-color .16s ease}.card:hover{transform:translateY(-3px);border-color:#c9bfae}
+  .metric{font:400 clamp(2.5rem,8vw,5rem) "Instrument Serif",Georgia,serif;color:#496b52}
+</style>
+</head>
+<body>
+<div class="announce">Fresh from nearby farmers · Pay the farmer on delivery · Picked fresh every morning</div>
+<header>
+  <div class="brand"><h1>Kisan.co</h1><small>Local Farmer Market</small></div>
+  <nav id="nav"></nav>
+  <div id="guestChip" class="hidden"><button type="button" id="guestLogin">Log in</button><button type="button" class="solid" id="guestReg">Register</button></div>
+  <div id="userChip" class="hidden"><span id="liveDot" title="Live updates"></span><span id="whoami"></span><button class="btn small ghost" id="logoutBtn" style="color:#fff;border-color:#fff;background:transparent">Log out</button></div>
+</header>
+
+<div id="authOverlay" class="hidden"></div>
+<main>
+  <!-- ============ LOGIN / REGISTER ============ -->
+  <section id="auth" aria-label="Log in or register" aria-hidden="true">
+    <div class="drawerHead"><strong>Welcome</strong><button type="button" id="authClose" aria-label="Close">✕</button></div>
+    <div class="panel authbox">
+      <div class="tabs" role="tablist">
+        <button id="tabLogin" class="on" type="button">Log in</button>
+        <button id="tabReg" type="button">Register</button>
+      </div>
+
+      <form id="loginForm" class="stack" novalidate>
+        <div><label for="lPhone">Mobile number</label><input id="lPhone" inputmode="numeric" autocomplete="username" placeholder="10-digit mobile number" style="width:100%"></div>
+        <div><label for="lPass">Password</label><input id="lPass" type="password" autocomplete="current-password" style="width:100%"></div>
+        <div class="err" id="lErr" role="alert"></div>
+        <button class="btn" type="submit">Log in</button>
+      </form>
+
+      <form id="regForm" class="stack hidden" novalidate>
+        <div>
+          <label>I am a</label>
+          <div class="tabs" style="margin:0">
+            <button type="button" id="roleCustomer" class="on">Customer</button>
+            <button type="button" id="roleFarmer">Farmer</button>
+          </div>
+        </div>
+        <div><label for="rName">Your name</label><input id="rName" autocomplete="name" style="width:100%"></div>
+        <div><label for="rPhone">Mobile number</label><input id="rPhone" inputmode="numeric" autocomplete="username" placeholder="10-digit mobile number" style="width:100%"></div>
+        <div><label for="rPass">Password (at least 8 characters)</label><input id="rPass" type="password" autocomplete="new-password" style="width:100%"></div>
+        <div id="farmBlock" class="hidden" style="display:grid;gap:12px">
+          <div><label for="rFarm">Farm name</label><input id="rFarm" style="width:100%"></div>
+          <div><label for="rArea">Village / area</label><input id="rArea" style="width:100%"></div>
+          <div>
+            <button class="btn ghost small" type="button" id="rLocBtn">📍 Use my farm's location</button>
+            <div class="muted" id="rLocStatus">Needed so nearby customers can find you. Only the distance is shown to them, never your exact spot.</div>
+          </div>
+        </div>
+        <div><label for="rPin">Pincode</label><input id="rPin" inputmode="numeric" maxlength="6" placeholder="6 digits" style="width:100%"></div>
+        <div><label for="rAddr" id="rAddrLbl">Delivery address (you can change it at checkout)</label><input id="rAddr" autocomplete="street-address" style="width:100%"></div>
+        <div class="err" id="rErr" role="alert"></div>
+        <button class="btn" type="submit">Create account</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ CUSTOMER ============ -->
+  <section id="customer" class="hidden">
+    <div id="tab-shop" class="tab">
+      <div class="hero"><div><p class="eb">This season</p><h2>Fresh from the farm</h2><p>Vegetables, fruits, grains and dairy from farmers near you, sorted nearest first.</p><button class="btn" type="button" onclick="document.getElementById('q').scrollIntoView({behavior:'smooth',block:'center'})">Shop fresh today</button></div></div>
+      <div id="guestNote" class="guestNote hidden">👋 You are browsing as a guest. <a href="#" id="guestNoteLogin">Log in or register</a> (at the side) when you want to order. Farmers also list their produce after logging in.</div>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="Search tomato, mango, a farm or a place..." aria-label="Search products">
+        <input id="pinBox" inputmode="numeric" maxlength="6" placeholder="Pincode" aria-label="Search by pincode">
+        <select id="cat" aria-label="Category"></select>
+        <button class="btn ghost" id="gpsBtn" type="button">📍 Use my location</button>
+      </div>
+      <div id="shopStatus" class="status"></div>
+      <div id="products" class="grid"></div>
+    </div>
+
+    <div id="tab-cart" class="tab hidden">
+      <div class="panel">
+        <h2 style="margin-top:0">Your cart</h2>
+        <div id="cartItems"></div>
+        <div class="row"><strong>Total</strong><strong id="cartTotal">₹0</strong></div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Delivery details</h3>
+        <form id="orderForm" class="stack" novalidate>
+          <div><label for="oAddr">Delivery address</label><input id="oAddr" style="width:100%" autocomplete="street-address"></div>
+          <div><label for="oPin">Pincode</label><input id="oPin" inputmode="numeric" maxlength="6" style="width:100%"></div>
+          <div><label for="oNote">Note for the farmer (optional)</label><input id="oNote" maxlength="200" style="width:100%"></div>
+          <div class="muted">You pay the farmer when you receive your order (cash or UPI). Your bill is shown right after you order.</div>
+          <div class="err" id="oErr" role="alert"></div>
+          <button class="btn" type="submit" id="placeBtn">Place order</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="tab-corders" class="tab hidden">
+      <h2 style="margin-top:0">My orders</h2>
+      <div id="cOrders"></div>
+    </div>
+    <div id="tab-about" class="tab hidden"><div class="panel"><p class="muted">OUR MARKET</p><h2>Grown nearby. Shared honestly.</h2><p>Kisan.co helps local farmers list their harvest and lets customers buy directly from them. Product availability and sales figures come from marketplace records.</p><div class="metric" id="soldCount">—</div><strong>confirmed deliveries</strong><p class="muted" id="salesNote">Only delivered orders are counted. No sample sales or testimonials are included.</p><div id="aboutOrders" class="muted"></div></div></div>
+    <div id="tab-detail" class="tab hidden"><button class="btn ghost small" type="button" id="detailBack">← Back to shop</button><div id="productDetail" class="panel"></div><h2>More from nearby farms</h2><div id="relatedProducts" class="grid"></div></div>
+  </section>
+
+  <!-- ============ FARMER ============ -->
+  <section id="farmer" class="hidden">
+    <div id="tab-fprod" class="tab">
+      <div class="panel">
+        <h2 style="margin-top:0">Add a product</h2>
+        <form id="addForm" class="stack" novalidate>
+          <div><label for="pName">Product name</label><input id="pName" maxlength="60" placeholder="e.g. Tomato" style="width:100%" autocomplete="off"></div>
+          <div class="cols">
+            <div><label for="pCat">Category</label><select id="pCat" style="width:100%"></select></div>
+            <div><label for="pUnit">Unit</label><input id="pUnit" list="unitList" value="kg" maxlength="20" style="width:100%"><datalist id="unitList"></datalist></div>
+          </div>
+          <div class="cols">
+            <div><label for="pPrice">Your price (₹ per unit)</label><input id="pPrice" type="number" min="0.5" step="0.5" style="width:100%"></div>
+            <div><label for="pQty">Quantity available</label><input id="pQty" type="number" min="0" step="0.5" style="width:100%"></div>
+          </div>
+          <div id="priceRef" aria-live="polite"><span class="muted">Type a product name to see the lowest and highest price for similar products.</span></div>
+          <div><label for="pDesc">Description (optional)</label><input id="pDesc" maxlength="200" style="width:100%"></div>
+          <div>
+            <label for="pImg">Photo of your produce (optional)</label>
+            <input id="pImg" type="file" accept="image/*">
+            <div><img id="pPrev" alt="Preview" class="hidden" style="max-width:160px;max-height:120px;border-radius:8px;margin-top:6px"></div>
+          </div>
+          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pOrg"> Organic</label>
+          <div class="err" id="pErr" role="alert"></div>
+          <button class="btn" type="submit" id="addBtn">Add product</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">My products</h3>
+        <div id="myList"></div>
+      </div>
+    </div>
+
+    <div id="tab-forders" class="tab hidden">
+      <h2 style="margin-top:0">Orders</h2>
+      <div id="fOrders"></div>
+    </div>
+    <div id="tab-ffeedback" class="tab hidden"><h2>Customer feedback</h2><div id="farmerFeedback"></div><div class="panel"><h2>Contact the market team</h2><form id="complaintForm" class="stack"><div><label for="complaintSubject">Subject</label><input id="complaintSubject" required minlength="3" maxlength="120" style="width:100%"></div><div><label for="complaintMessage">What happened?</label><textarea id="complaintMessage" required minlength="10" maxlength="2000" rows="5" style="width:100%"></textarea></div><div class="err" id="complaintErr"></div><button class="btn" type="submit">Send complaint</button></form></div><h2>My complaints</h2><div id="farmerComplaints"></div></div>
+  </section>
+</main>
+
+<section id="tab-profile" class="tab hidden" style="max-width:1100px;margin:0 auto;padding:16px"><div class="panel"><p class="muted">ACCOUNT</p><h2>My details</h2><form id="profileForm" class="stack"><div><label for="profileName">Name</label><input id="profileName" required minlength="2" maxlength="60" style="width:100%"></div><div id="profileFarmBlock" class="hidden"><label for="profileFarm">Farm name</label><input id="profileFarm" maxlength="80" style="width:100%"><label for="profileArea">Village / area</label><input id="profileArea" maxlength="60" style="width:100%"></div><div><label for="profileAddress">Address</label><input id="profileAddress" maxlength="200" style="width:100%"></div><div><label for="profilePin">Pincode</label><input id="profilePin" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required style="width:100%"></div><div class="err" id="profileErr"></div><button class="btn" type="submit">Save my details</button></form><p class="muted">For your safety, mobile number and account role cannot be changed here.</p></div></section>
+
+<div id="billModal" class="hidden" role="dialog" aria-label="Bill"></div>
+
+<button id="chatBtn" class="hidden" aria-label="Open chat assistant">💬</button>
+<div id="chatBox" role="dialog" aria-label="Chat assistant">
+  <div id="chatHead"><strong>Ask our assistant</strong><button id="chatClose" aria-label="Close">✕</button></div>
+  <div id="chatLog"></div>
+  <form id="chatForm">
+    <input id="chatInput" placeholder="Type your question..." autocomplete="off" required>
+    <button class="btn" type="submit" id="chatSend">Send</button>
+  </form>
+</div>
+
+<footer><a href="#/about" id="aboutLink">About Kisan.co</a> · Pay the farmer directly on delivery. Your customer location is used only to sort products and is never stored.</footer>
+
+<script>
+"use strict";
+// Opened as a file, the page talks to localhost:8000. Served by the backend, it uses the same address.
+const API_BASE = location.protocol === "file:" ? "http://localhost:8000" : "";
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => "₹" + (Math.round(n * 100) / 100).toLocaleString("en-IN", {maximumFractionDigits: 2});
+const when = iso => iso ? new Date(iso).toLocaleString("en-IN", {dateStyle: "medium", timeStyle: "short"}) : "";
+const EMOJI = {Vegetables:"🥦",Fruits:"🍎",Dairy:"🥛",Grains:"🌾",Pulses:"🫘",Spices:"🧂","Eggs & Meat":"🥚","Honey & Oils":"🍯",Flowers:"🌼",Other:"🧺"};
+const STATUS = {placed:"Placed", accepted:"Accepted", out_for_delivery:"Out for delivery", delivered:"Delivered", cancelled:"Cancelled"};
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch(e){} }
+function debounce(fn, ms){ let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+let token = lsGet("fm_token"), me = null, meta = {categories: [], units: []};
+let gps = null, lastOrigin = null, roadInfo = {}, products = [], cart = {}, myProducts = [], orders = [];
+let gpsDenied = false, es = null, lastV = null;
+let selectedProduct = null, salesSummary = {units: 0, orders: 0};
+const editDraft = {}, otpDraft = {};
+
+function toast(msg){
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3500);
+}
+
+// ---------------------------------------------------------------- API
+function errText(d, status){
+  if (d && typeof d.detail === "string") return d.detail;
+  if (d && Array.isArray(d.detail) && d.detail.length){
+    const e = d.detail[0], f = (e.loc || []).slice(-1)[0];
+    return (f ? f + ": " : "") + String(e.msg).replace(/^Value error, /, "");
+  }
+  return "Something went wrong (" + status + ").";
+}
+async function api(path, opt = {}){
+  const headers = {};
+  if (opt.body) headers["Content-Type"] = "application/json";
+  if (token && opt.auth !== false) headers["Authorization"] = "Bearer " + token;
+  let res;
+  try { res = await fetch(API_BASE + path, {method: opt.method || "GET", headers, body: opt.body ? JSON.stringify(opt.body) : undefined}); }
+  catch(e){ throw new Error("Can't reach the server. Make sure it is running."); }
+  let data = null; try { data = await res.json(); } catch(e){}
+  if (!res.ok){
+    if (res.status === 401 && token && opt.auth !== false) logout(true);
+    throw new Error(errText(data, res.status));
+  }
+  return data;
+}
+
+// ---------------------------------------------------------------- session
+function setSession(t, user){
+  token = t; me = user; lsSet("fm_token", t);
+  cart = {}; try { cart = JSON.parse(lsGet("fm_cart_" + user.id) || "{}"); } catch(e){}
+  enterApp();
+}
+function logout(expired){
+  if (token && !expired) api("/auth/logout", {method: "POST"}).catch(() => {});
+  token = null; me = null; lsSet("fm_token", null);
+  if (es){ es.close(); es = null; } lastV = null;
+  products = []; orders = []; myProducts = []; roadInfo = {}; lastOrigin = null; cart = {};
+  showGuest();
+  if (expired) toast("Please log in again.");
+}
+// Guests (not logged in) see the shop first. Log in / Register sit at the side.
+function showGuest(){
+  $("farmer").classList.add("hidden"); $("customer").classList.remove("hidden");
+  $("userChip").classList.add("hidden"); $("guestChip").classList.remove("hidden");
+  $("chatBtn").classList.add("hidden"); $("chatBox").classList.remove("open");
+  $("guestNote").classList.remove("hidden");
+  $("nav").innerHTML = ""; setTab("shop");
+  closeAuth(); resetAuthForms();
+  startLive(); renderProducts(); loadProducts();
+  if (!gpsDenied) getGps(true);
+}
+function resetAuthForms(){
+  $("tabLogin").click(); $("loginForm").reset(); $("regForm").reset(); farmGps = null; setRole("customer");
+  $("lErr").textContent = ""; $("rErr").textContent = "";
+  $("rLocStatus").textContent = "Needed so nearby customers can find you. Only the distance is shown to them, never your exact spot.";
+}
+function openAuth(tab){
+  $("auth").classList.add("open"); $("auth").setAttribute("aria-hidden", "false"); $("authOverlay").classList.remove("hidden");
+  (tab === "register" ? $("tabReg") : $("tabLogin")).click();
+  setTimeout(() => { const f = tab === "register" ? $("rName") : $("lPhone"); if (f) f.focus(); }, 250);
+}
+function closeAuth(){
+  $("auth").classList.remove("open"); $("auth").setAttribute("aria-hidden", "true"); $("authOverlay").classList.add("hidden");
+}
+$("guestLogin").onclick = () => openAuth("login"); $("guestReg").onclick = () => openAuth("register");
+$("authClose").onclick = closeAuth; $("authOverlay").onclick = closeAuth;
+$("guestNoteLogin").onclick = e => { e.preventDefault(); openAuth("login"); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeAuth(); });
+
+async function boot(){
+  try { meta = await api("/meta", {auth: false}); } catch(e){ meta = {categories: ["Vegetables","Fruits","Dairy","Grains","Pulses","Spices","Eggs & Meat","Honey & Oils","Flowers","Other"], units: ["kg","dozen","litre","piece","bunch"]}; }
+  Object.assign(EMOJI, meta.emojis || {});   // categories can bring their own emoji
+  fillSelect($("pCat"), meta.categories);
+  $("cat").innerHTML = '<option value="">All categories</option>' + meta.categories.map(c => `<option>${esc(c)}</option>`).join("");
+  $("unitList").innerHTML = meta.units.map(u => `<option value="${esc(u)}">`).join("");
+  if (token){
+    try { const r = await api("/me"); me = r.user; try { cart = JSON.parse(lsGet("fm_cart_" + me.id) || "{}"); } catch(e){} enterApp(); return; }
+    catch(e){ token = null; lsSet("fm_token", null); }
+  }
+  showGuest();
+}
+function fillSelect(sel, list){ sel.innerHTML = list.map(c => `<option>${esc(c)}</option>`).join(""); }
+
+function enterApp(){
+  closeAuth(); $("guestChip").classList.add("hidden"); $("guestNote").classList.add("hidden");
+  $("userChip").classList.remove("hidden"); $("chatBtn").classList.remove("hidden");
+  $("whoami").textContent = (me.role === "farmer" ? "🧑‍🌾 " : "🛒 ") + me.name;
+  const isF = me.role === "farmer";
+  $("farmer").classList.toggle("hidden", !isF); $("customer").classList.toggle("hidden", isF);
+  buildNav(); startLive();
+  const requested = location.hash.replace(/^#\//, "");
+  if (isF){ setTab(["fprod","forders","ffeedback","profile"].includes(requested) ? requested : "fprod"); loadMyProducts(); loadOrders(); schedulePriceRef(); }
+  else {
+    $("oAddr").value = me.address || ""; $("oPin").value = me.pincode || "";
+    setTab(["shop","cart","corders","about","profile"].includes(requested) ? requested : "shop"); loadProducts(); loadOrders(); renderCart();
+    if (!gpsDenied) getGps(true);
+  }
+}
+function buildNav(){
+  const items = me.role === "farmer" ? [["fprod","My products"],["forders","Orders"],["ffeedback","Feedback & help"],["profile","My details"]] : [["shop","Shop"],["cart","Cart"],["corders","My orders"],["about","About"],["profile","My details"]];
+  $("nav").innerHTML = items.map(([k, t]) => `<button data-tab="${k}" id="nav-${k}">${t}<span class="badge hidden" id="bd-${k}"></span></button>`).join("");
+}
+$("nav").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if (b) setTab(b.dataset.tab); });
+function setTab(name, updateUrl = true){
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("hidden", t.id !== "tab-" + name));
+  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  if (name === "cart") renderCart();
+  if (name === "about") loadAbout();
+  if (name === "ffeedback") loadFarmerFeedback();
+  if (name === "profile") loadProfile();
+  if (updateUrl && location.hash !== "#/" + name) history.pushState({page:name}, "", "#/" + name);
+}
+window.addEventListener("popstate", () => { let name = location.hash.replace(/^#\//, "") || (me?.role === "farmer" ? "fprod" : "shop"); if (name === "detail" && !selectedProduct) name = "shop"; if ($("tab-" + name)) setTab(name, false); });
+$("aboutLink").onclick = e => { e.preventDefault(); setTab("about"); window.scrollTo(0,0); };
+function setBadge(tab, n){ const b = $("bd-" + tab); if (!b) return; b.textContent = n; b.classList.toggle("hidden", !n); }
+$("logoutBtn").onclick = () => logout(false);
+
+// ---------------------------------------------------------------- login / register
+let regRole = "customer", farmGps = null;
+$("tabLogin").onclick = () => { $("tabLogin").classList.add("on"); $("tabReg").classList.remove("on"); $("loginForm").classList.remove("hidden"); $("regForm").classList.add("hidden"); };
+$("tabReg").onclick = () => { $("tabReg").classList.add("on"); $("tabLogin").classList.remove("on"); $("regForm").classList.remove("hidden"); $("loginForm").classList.add("hidden"); };
+function setRole(r){
+  regRole = r;
+  $("roleCustomer").classList.toggle("on", r === "customer"); $("roleFarmer").classList.toggle("on", r === "farmer");
+  $("farmBlock").classList.toggle("hidden", r !== "farmer");
+  $("farmBlock").style.display = r === "farmer" ? "grid" : "none";
+  $("rAddrLbl").textContent = r === "farmer" ? "Farm address (optional)" : "Delivery address (you can change it at checkout)";
+}
+$("roleCustomer").onclick = () => setRole("customer"); $("roleFarmer").onclick = () => setRole("farmer"); setRole("customer");
+
+$("loginForm").onsubmit = async e => {
+  e.preventDefault(); $("lErr").textContent = "";
+  try { const r = await api("/auth/login", {method: "POST", auth: false, body: {phone: $("lPhone").value, password: $("lPass").value}}); $("lPass").value = ""; setSession(r.token, r.user); }
+  catch(err){ $("lErr").textContent = err.message; }
+};
+$("rLocBtn").onclick = () => {
+  if (!navigator.geolocation){ $("rLocStatus").textContent = "Your browser cannot share location."; return; }
+  $("rLocStatus").textContent = "Locating...";
+  navigator.geolocation.getCurrentPosition(
+    p => { farmGps = {lat: p.coords.latitude, lng: p.coords.longitude}; $("rLocStatus").textContent = "✓ Farm location captured."; },
+    err => { $("rLocStatus").textContent = "Could not get your location (" + err.message + "). Allow location access and try again."; },
+    {timeout: 10000, enableHighAccuracy: true});
+};
+$("regForm").onsubmit = async e => {
+  e.preventDefault(); $("rErr").textContent = "";
+  const body = {role: regRole, name: $("rName").value.trim(), phone: $("rPhone").value, password: $("rPass").value,
+                pincode: $("rPin").value.trim(), address: $("rAddr").value.trim()};
+  if (regRole === "farmer"){
+    body.farm_name = $("rFarm").value.trim(); body.area = $("rArea").value.trim();
+    if (farmGps){ body.lat = farmGps.lat; body.lng = farmGps.lng; }
+  }
+  try { const r = await api("/auth/register", {method: "POST", auth: false, body}); $("rPass").value = ""; setSession(r.token, r.user); }
+  catch(err){ $("rErr").textContent = err.message; }
+};
+
+// ---------------------------------------------------------------- location (customer)
+function getGps(quiet){
+  return new Promise(resolve => {
+    if (!navigator.geolocation){ resolve(false); return; }
+    navigator.geolocation.getCurrentPosition(
+      p => { gps = {lat: p.coords.latitude, lng: p.coords.longitude}; gpsDenied = false; loadProducts(); resolve(true); },
+      err => { gpsDenied = true; if (!quiet) toast("Location is blocked. Type your pincode instead."); loadProducts(); resolve(false); },
+      {timeout: 10000, maximumAge: 60000});
+  });
+}
+$("gpsBtn").onclick = () => { $("pinBox").value = ""; getGps(false); };
+
+// ---------------------------------------------------------------- shop
+const reloadProducts = debounce(() => loadProducts(), 300);
+$("q").oninput = reloadProducts; $("cat").onchange = () => loadProducts();
+$("pinBox").oninput = () => { $("pinBox").value = $("pinBox").value.replace(/\D/g, ""); if ($("pinBox").value.length === 6 || $("pinBox").value.length === 0) loadProducts(); };
+
+async function loadProducts(){
+  if (me && me.role !== "customer") return;   // guests and customers see the shop
+  const p = new URLSearchParams();
+  if ($("q").value.trim()) p.set("q", $("q").value.trim());
+  if ($("cat").value) p.set("category", $("cat").value);
+  const pin = $("pinBox").value.trim();
+  if (pin.length === 6) p.set("pincode", pin); else if (gps){ p.set("lat", gps.lat); p.set("lng", gps.lng); }
+  try {
+    const r = await api("/products?" + p.toString());
+    products = r.products; lastOrigin = r.origin;
+    renderShopStatus(r); loadRoads(r.origin); renderProducts();
+  } catch(e){ $("shopStatus").className = "status warn"; $("shopStatus").textContent = e.message; }
+}
+async function loadRoads(origin){
+  if (!origin) { roadInfo = {}; return; }
+  try {
+    const r = await api(`/nearby?lat=${origin.lat}&lng=${origin.lng}&radius_km=0&limit=50`);
+    roadInfo = {}; r.farms.forEach(f => { roadInfo[f.id] = f; }); renderProducts();
+  } catch(e){ /* road times are optional */ }
+}
+function renderShopStatus(r){
+  const el = $("shopStatus"); let msg, warn = false;
+  const o = r.origin;
+  if (o && o.source === "gps") msg = "Nearest first, measured from your location.";
+  else if (o && o.source === "pincode") msg = `Nearest first, measured from pincode ${esc($("pinBox").value)}.`;
+  else if (o && o.source === "profile" && me){ msg = `Nearest first, measured from your pincode ${esc(me.pincode)}. Allow location for a more exact result.`; }
+  else if (r.pincode_unresolved){ msg = `Pincode ${esc(r.pincode_unresolved)} is not on our map yet, so farms with the most similar pincode come first.`; warn = true; }
+  else { msg = "Allow location access or type your pincode to see the nearest products first."; warn = true; }
+  el.className = "status" + (warn ? " warn" : "");
+  el.innerHTML = `${msg} <strong>${r.count}</strong> product${r.count === 1 ? "" : "s"}.`;
+}
+function renderProducts(){
+  const box = $("products");
+  if (!products.length){
+    const filtered = $("q").value.trim() || $("cat").value || $("pinBox").value.trim();
+    box.innerHTML = `<div class="panel muted" style="grid-column:1/-1;text-align:center">${filtered ? "No products match your search." : "No products yet. They appear here the moment a farmer lists them."}</div>`;
+    return;
+  }
+  box.innerHTML = products.map(p => {
+    const inCart = cart[p.id] ? cart[p.id].qty : 0, road = roadInfo[p.farm_id];
+    const dist = p.distance_km != null
+      ? `📍 ${p.distance_km < 1 ? "under 1" : p.distance_km} km away${road ? ` · ~${road.eta_min >= 60 ? Math.floor(road.eta_min / 60) + " h " + (road.eta_min % 60) + " min" : road.eta_min + " min"} by road${road.routing === "osrm" ? "" : " (est.)"}` : ""}`
+      : (p.pincode_match >= 6 ? "📍 Same pincode" : p.pincode_match >= 3 ? "📍 Nearby pincode" : "");
+    return `<div class="card" data-product="${p.id}" tabindex="0" role="link" aria-label="View ${esc(p.name)}">
+      ${p.image ? `<img class="photo" loading="lazy" src="${esc(API_BASE + "/" + p.image)}" alt="${esc(p.name)}">` : `<div class="noimg">${EMOJI[p.category] || "🧺"}</div>`}
+      <h3>${esc(p.name)}</h3>
+      <div class="farm">🧑‍🌾 ${esc(p.farm)}${p.area ? " · " + esc(p.area) : ""}</div>
+      ${dist ? `<div class="farm">${dist}</div>` : ""}
+      <div>${p.organic ? '<span class="tag">Organic</span>' : ""}<span class="tag">${esc(p.category)}</span></div>
+      ${p.description ? `<div class="farm">${esc(p.description)}</div>` : ""}
+      <div class="farm">${p.rating_count ? `★ ${esc(p.rating)} · ${p.rating_count} verified purchase${p.rating_count === 1 ? "" : "s"}` : "No customer ratings yet"}</div>
+      <div class="price">${money(p.price)} / ${esc(p.unit)} <span class="muted" style="font-weight:400">· ${p.qty} left</span></div>
+      <div class="qty"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><strong>${inCart}</strong><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></div>
+    </div>`;
+  }).join("");
+}
+$("products").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const p = products.find(x => x.id === +b.dataset.id); if (!p) return;
+  if (!me){ toast("Please log in or register as a customer to order."); openAuth("login"); return; }
+  if (me.role !== "customer") return;
+  const cur = cart[p.id] ? cart[p.id].qty : 0, next = b.dataset.act === "inc" ? cur + 1 : cur - 1;
+  if (next > p.qty){ toast(`Only ${p.qty} ${p.unit} available.`); return; }
+  if (next <= 0) delete cart[p.id];
+  else cart[p.id] = {id: p.id, qty: next, name: p.name, price: p.price, unit: p.unit, farm: p.farm, image: p.image, max: p.qty};
+  saveCart(); renderProducts(); renderCart();
+});
+$("products").addEventListener("click", e => { if (e.target.closest("button")) return; const card=e.target.closest("[data-product]"); if(card) openProduct(+card.dataset.product); });
+$("products").addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches("[data-product]")){ e.preventDefault(); openProduct(+e.target.dataset.product); } });
+$("relatedProducts").addEventListener("click", e => { const card=e.target.closest("[data-product]"); if(card) openProduct(+card.dataset.product); });
+$("detailBack").onclick = () => setTab("shop");
+function openProduct(id){
+  selectedProduct = products.find(p => p.id === id); if (!selectedProduct) return;
+  const p=selectedProduct;
+  $("productDetail").innerHTML = `<div class="cols"><div>${p.image ? `<img class="photo" style="height:340px" src="${esc(API_BASE+"/"+p.image)}" alt="${esc(p.name)}">` : `<div class="noimg" style="height:340px">${EMOJI[p.category]||"🧺"}</div>`}</div><div><p class="muted">${esc(p.category)} · ${esc(p.farm)}</p><h1>${esc(p.name)}</h1><p>${esc(p.description||"Fresh produce listed by its farmer.")}</p><p class="farm">${p.rating_count ? `★ ${esc(p.rating)} from ${p.rating_count} verified purchase${p.rating_count===1?"":"s"}` : "No customer ratings yet"}</p><p class="price">${money(p.price)} / ${esc(p.unit)} · ${p.qty} available</p><button class="btn" data-act="inc" data-id="${p.id}">Add to cart</button></div></div>`;
+  $("relatedProducts").innerHTML=products.filter(x=>x.id!==p.id).slice(0,4).map(x=>`<article class="card" data-product="${x.id}"><h3>${esc(x.name)}</h3><p>${esc(x.farm)}</p><strong>${money(x.price)} / ${esc(x.unit)}</strong><p class="muted">${esc(x.description||"")}</p></article>`).join("")||'<p class="muted">No other products are listed yet.</p>';
+  setTab("detail"); window.scrollTo(0,0);
+}
+$("productDetail").addEventListener("click", e=>{const b=e.target.closest("button[data-act=inc]"); if(!b)return; const p=selectedProduct;if(!me){openAuth("login");return;}if(me.role!=="customer")return;const old=cart[p.id]?.qty||0;if(old+1>p.qty){toast(`Only ${p.qty} ${p.unit} available.`);return;}cart[p.id]={id:p.id,qty:old+1,name:p.name,price:p.price,unit:p.unit,farm:p.farm,image:p.image,max:p.qty};saveCart();renderCart();toast("Added to your cart.");});
+
+// ---------------------------------------------------------------- cart and checkout
+function saveCart(){ if (me) lsSet("fm_cart_" + me.id, JSON.stringify(cart)); }
+function cartTotal(){ return Object.values(cart).reduce((s, i) => s + i.price * i.qty, 0); }
+function renderCart(){
+  const items = Object.values(cart), n = items.reduce((s, i) => s + i.qty, 0);
+  setBadge("cart", n);
+  $("cartItems").innerHTML = items.length ? items.map(i => `
+    <div class="row"><span>${esc(i.name)} <span class="muted">· ${esc(i.farm)}</span><br><span class="muted">${money(i.price)} / ${esc(i.unit)}</span></span>
+    <span class="qty" style="margin:0;padding:0"><button data-act="dec" data-id="${i.id}">−</button><strong>${i.qty}</strong><button data-act="inc" data-id="${i.id}">+</button>
+    <strong style="min-width:70px;text-align:right">${money(i.price * i.qty)}</strong><button data-act="rm" data-id="${i.id}" aria-label="Remove" style="border:0;color:var(--warn)">✕</button></span></div>`).join("")
+    : '<div class="muted" style="padding:14px 0">Your cart is empty.</div>';
+  $("cartTotal").textContent = money(cartTotal()); $("placeBtn").disabled = !items.length;
+}
+$("cartItems").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const i = cart[+b.dataset.id]; if (!i) return;
+  if (b.dataset.act === "rm") delete cart[i.id];
+  else if (b.dataset.act === "inc"){ if (i.qty + 1 > i.max){ toast(`Only ${i.max} ${i.unit} available.`); return; } i.qty += 1; }
+  else { i.qty -= 1; if (i.qty <= 0) delete cart[i.id]; }
+  saveCart(); renderCart(); renderProducts();
+});
+$("oPin").oninput = () => { $("oPin").value = $("oPin").value.replace(/\D/g, ""); };
+$("orderForm").onsubmit = async e => {
+  e.preventDefault(); $("oErr").textContent = ""; $("placeBtn").disabled = true;
+  try {
+    const r = await api("/orders", {method: "POST", body: {
+      items: Object.values(cart).map(i => ({product_id: i.id, qty: i.qty})),
+      address: $("oAddr").value.trim(), pincode: $("oPin").value.trim(), note: $("oNote").value.trim()}});
+    cart = {}; saveCart(); renderCart(); $("oNote").value = "";
+    await loadOrders(); loadProducts(); setTab("corders"); showBills(r.orders, true);
+  } catch(err){ $("oErr").textContent = err.message; renderCart(); }
+};
+
+// ---------------------------------------------------------------- orders (both roles)
+const reloadOrders = debounce(() => loadOrders(), 300);
+async function loadOrders(){
+  if (!me) return;
+  try { orders = (await api("/orders")).orders; } catch(e){ return; }
+  if (me.role === "customer"){
+    try { purchaseFeedback = (await api("/feedback/mine")).feedback; } catch(e) { purchaseFeedback = []; }
+    renderCustomerOrders();
+    setBadge("corders", orders.filter(o => ["placed","accepted","out_for_delivery"].includes(o.status)).length);
+  } else {
+    renderFarmerOrders();
+    setBadge("forders", orders.filter(o => o.status === "placed").length);
+  }
+}
+let purchaseFeedback = [];
+function itemsLine(o){ return o.items.map(i => `${esc(i.name)} × ${i.qty} ${esc(i.unit)}`).join(", "); }
+function orderHead(o, who){
+  return `<div class="top"><div><strong>${esc(o.bill_no)}</strong> <span class="muted">· ${when(o.created_at)}</span><br>${who}</div>
+    <span class="st ${o.status}">${STATUS[o.status]}</span></div>
+    <div style="margin-top:6px">${itemsLine(o)}</div>
+    <div style="margin-top:4px"><strong>${money(o.total)}</strong> <span class="muted">· pay on delivery</span></div>`;
+}
+function renderCustomerOrders(){
+  $("cOrders").innerHTML = orders.length ? orders.map(o => {
+    let extra = "";
+    if (o.status === "out_for_delivery" && o.otp) extra = `<div class="otpbox">Give this OTP to the farmer <strong>only when you have received your order</strong>
+      <div class="otpnum">${esc(o.otp)}</div><button class="btn ghost small" data-act="newotp" data-id="${o.id}">Get a new OTP</button></div>`;
+    if (o.status === "delivered") { const f=purchaseFeedback.find(x=>x.order_id===o.id); extra = `<div class="muted" style="margin-top:6px">✓ Delivered ${when(o.delivered_at)} and closed with your OTP.</div>` + (f ? `<div class="panel"><strong>Your rating: ${f.rating}/5</strong><p>${esc(f.comment)}</p>${f.admin_reply?`<div class="status">Market team: ${esc(f.admin_reply)}</div>`:""}</div>` : `<form class="panel feedback-form" data-order="${o.id}"><label>Rate this purchase</label><select name="rating" required><option value="">Choose 1–5</option><option value="5">5 · Excellent</option><option value="4">4 · Good</option><option value="3">3 · Okay</option><option value="2">2 · Poor</option><option value="1">1 · Very poor</option></select><label for="fb-${o.id}">What should we know?</label><textarea id="fb-${o.id}" name="comment" maxlength="1000" rows="2" placeholder="Your purchase feedback (optional)"></textarea><button class="btn small" type="submit">Send purchase feedback</button></form>`); }
+    const can = ["placed","accepted"].includes(o.status);
+    return `<div class="order">${orderHead(o, `🧑‍🌾 ${esc(o.farmer.name)}${o.farmer.area ? " · " + esc(o.farmer.area) : ""} · ☎ ${esc(o.farmer.phone)}`)}${extra}
+      <div class="actions"><button class="btn ghost small" data-act="bill" data-id="${o.id}">View bill</button>${can ? `<button class="btn danger small" data-act="cancel" data-id="${o.id}">Cancel order</button>` : ""}</div></div>`;
+  }).join("") : '<div class="panel muted">You have not placed any orders yet.</div>';
+}
+$("cOrders").addEventListener("submit", async e=>{const form=e.target.closest(".feedback-form");if(!form)return;e.preventDefault();const fd=new FormData(form);try{await api(`/orders/${form.dataset.order}/feedback`,{method:"POST",body:{rating:Number(fd.get("rating")),comment:fd.get("comment")||""}});toast("Thanks. Your purchase feedback was sent.");await loadOrders();}catch(err){toast(err.message);}});
+async function loadAbout(){try{const r=await api("/about",{auth:false});salesSummary=r.sold;$("soldCount").textContent=Number(r.sold.orders).toLocaleString("en-IN");$("aboutOrders").textContent=r.statement;}catch(e){$("soldCount").textContent="—";}}
+async function loadFarmerFeedback(){try{const r=await api("/farmer/feedback");$("farmerFeedback").innerHTML=r.feedback.length?r.feedback.map(f=>`<article class="panel"><strong>★ ${f.rating}/5 · ${esc(f.customer_name)} · ${when(f.created_at)}</strong><p>${esc(f.comment||"No written comment.")}</p>${f.admin_reply?`<div class="status">Market team response: ${esc(f.admin_reply)} · ${when(f.replied_at)}</div>`:'<p class="muted">The market team has not replied yet.</p>'}</article>`).join(""):'<p class="panel muted">No verified purchase feedback yet.</p>';$("farmerComplaints").innerHTML=r.complaints.length?r.complaints.map(c=>`<article class="panel"><strong>${esc(c.subject)} · ${when(c.created_at)}</strong><p>${esc(c.message)}</p>${c.admin_reply?`<div class="status">Market team response: ${esc(c.admin_reply)} · ${when(c.replied_at)}</div>`:'<p class="muted">Awaiting response.</p>'}</article>`).join(""):'<p class="panel muted">No complaints submitted.</p>';}catch(e){$("farmerFeedback").textContent=e.message;}}
+$("complaintForm").onsubmit=async e=>{e.preventDefault();$("complaintErr").textContent="";try{await api("/farmer/complaints",{method:"POST",body:{subject:$("complaintSubject").value.trim(),message:$("complaintMessage").value.trim()}});$("complaintForm").reset();toast("Complaint sent to the market team.");loadFarmerFeedback();}catch(err){$("complaintErr").textContent=err.message;}};
+function loadProfile(){if(!me)return;$("profileName").value=me.name||"";$("profileFarm").value=me.farm_name||"";$("profileArea").value=me.area||"";$("profileAddress").value=me.address||"";$("profilePin").value=me.pincode||"";$("profileFarmBlock").classList.toggle("hidden",me.role!=="farmer");$("profileFarmBlock").style.display=me.role==="farmer"?"block":"none";}
+$("profileForm").onsubmit=async e=>{e.preventDefault();$("profileErr").textContent="";const body={name:$("profileName").value.trim(),address:$("profileAddress").value.trim(),pincode:$("profilePin").value.trim()};if(me?.role==="farmer"){body.farm_name=$("profileFarm").value.trim();body.area=$("profileArea").value.trim();}try{const r=await api("/me",{method:"PATCH",body});me=r.user;$("whoami").textContent=(me.role==="farmer"?"🧑‍🌾 ":"🛒 ")+me.name;toast("Your details are saved.");}catch(err){$("profileErr").textContent=err.message;}};
+function renderFarmerOrders(){
+  const active = document.activeElement, focusId = active && active.id && active.id.startsWith("otp-") ? active.id : null;
+  $("fOrders").innerHTML = orders.length ? orders.map(o => {
+    let act = "";
+    if (o.status === "placed") act = `<button class="btn small" data-act="accept" data-id="${o.id}">Accept order</button>`;
+    if (o.status === "accepted") act = `<button class="btn small" data-act="dispatch" data-id="${o.id}">Out for delivery</button>`;
+    let extra = "";
+    if (o.status === "out_for_delivery"){
+      const left = o.otp_attempts_left;
+      extra = `<div class="otpbox"><div>Ask the customer for the OTP when you hand over the order.</div>
+        <div class="actions" style="justify-content:center"><input class="otpin" id="otp-${o.id}" inputmode="numeric" maxlength="6" placeholder="------" autocomplete="off" value="${esc(otpDraft[o.id] || "")}">
+        <button class="btn small" data-act="complete" data-id="${o.id}" ${left === 0 ? "disabled" : ""}>Complete delivery</button></div>
+        <div class="muted">${left === 0 ? "No tries left. The customer must request a new OTP." : left + " tries left"}</div></div>`;
+    }
+    if (o.status === "delivered") extra = `<div class="muted" style="margin-top:6px">✓ Deal closed ${when(o.delivered_at)}.</div>`;
+    const can = ["placed","accepted","out_for_delivery"].includes(o.status);
+    return `<div class="order">${orderHead(o, `🛒 ${esc(o.customer.name)} · ☎ ${esc(o.customer.phone)}<br>📍 ${esc(o.address)}, ${esc(o.pincode)}${o.note ? `<br>📝 ${esc(o.note)}` : ""}`)}${extra}
+      <div class="actions">${act}<button class="btn ghost small" data-act="bill" data-id="${o.id}">View bill</button>${can ? `<button class="btn danger small" data-act="cancel" data-id="${o.id}">Cancel</button>` : ""}</div></div>`;
+  }).join("") : '<div class="panel muted">No orders yet. They appear here as soon as a customer orders.</div>';
+  if (focusId && $(focusId)) { const el = $(focusId); el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+}
+$("fOrders").addEventListener("input", e => { if (e.target.id && e.target.id.startsWith("otp-")){ e.target.value = e.target.value.replace(/\D/g, ""); otpDraft[+e.target.id.slice(4)] = e.target.value; } });
+async function orderAction(e){
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const id = +b.dataset.id, act = b.dataset.act, o = orders.find(x => x.id === id);
+  if (act === "bill"){ if (o) showBills([o], false); return; }
+  if (act === "cancel" && !confirm("Cancel this order?")) return;
+  const body = act === "complete" ? {otp: ($("otp-" + id) || {}).value || ""} : undefined;
+  const path = {accept:"accept", dispatch:"dispatch", complete:"complete", cancel:"cancel", newotp:"new-otp"}[act];
+  b.disabled = true;
+  try {
+    await api(`/orders/${id}/${path}`, {method: "POST", body});
+    if (act === "complete"){ delete otpDraft[id]; toast("Deal closed. Final bill is ready."); }
+    if (act === "dispatch") toast("The customer can now see the OTP.");
+    await loadOrders(); if (me.role === "customer") loadProducts(); else loadMyProducts();
+  } catch(err){ toast(err.message); b.disabled = false; loadOrders(); }
+}
+$("cOrders").addEventListener("click", orderAction); $("fOrders").addEventListener("click", orderAction);
+
+// ---------------------------------------------------------------- bill
+function billHTML(o){
+  const stamp = o.status === "delivered" ? "delivered" : o.status === "cancelled" ? "cancelled" : "open";
+  const stampText = o.status === "delivered" ? "DELIVERED" : o.status === "cancelled" ? "CANCELLED" : "PAY ON DELIVERY";
+  return `<div class="bill"><span class="stamp ${stamp}">${stampText}</span>
+    <h2>Kisan.co</h2><div class="muted">Bill / Receipt · ${esc(o.bill_no)} · ${when(o.created_at)}</div>
+    <div class="cols" style="margin-top:12px">
+      <div><strong>Sold by</strong><br>${esc(o.farmer.name)}${o.farmer.area ? "<br>" + esc(o.farmer.area) : ""}<br>☎ ${esc(o.farmer.phone)}</div>
+      <div><strong>Billed to</strong><br>${esc(o.customer.name)}<br>☎ ${esc(o.customer.phone)}<br>${esc(o.address)}, ${esc(o.pincode)}</div>
+    </div>
+    <table><thead><tr><th>Item</th><th class="n">Rate</th><th class="n">Qty</th><th class="n">Amount</th></tr></thead><tbody>
+      ${o.items.map(i => `<tr><td>${esc(i.name)}</td><td class="n">${money(i.price)} / ${esc(i.unit)}</td><td class="n">${i.qty} ${esc(i.unit)}</td><td class="n">${money(i.line_total)}</td></tr>`).join("")}
+      <tr class="tot"><td colspan="3">Total to pay</td><td class="n">${money(o.total)}</td></tr></tbody></table>
+    <div class="muted">${o.status === "delivered" ? `Delivered on ${when(o.delivered_at)}. The deal was closed with the customer's OTP.` : o.status === "cancelled" ? "This order was cancelled." : "Pay the farmer directly when you receive your order (cash or UPI). The deal closes when the farmer enters your delivery OTP."}</div>
+  </div>`;
+}
+function showBills(list, justPlaced){
+  const grand = list.reduce((s, o) => s + o.total, 0);
+  $("billModal").innerHTML = (justPlaced ? `<div class="bill noprint" style="background:#e8f5e9"><strong>✓ Order placed.</strong> Here ${list.length > 1 ? "are your bills, one per farmer" : "is your bill"}. ${list.length > 1 ? `Total across farmers: <strong>${money(grand)}</strong>.` : ""} The farmer will accept it, and you will get a delivery OTP when it is on its way.</div>` : "")
+    + list.map(billHTML).join("")
+    + `<div class="bill noprint" style="text-align:center"><button class="btn" id="printBill">🖨 Print</button> <button class="btn ghost" id="closeBill">Close</button></div>`;
+  $("billModal").classList.remove("hidden");
+  $("printBill").onclick = () => window.print(); $("closeBill").onclick = () => $("billModal").classList.add("hidden");
+}
+$("billModal").addEventListener("click", e => { if (e.target === $("billModal")) $("billModal").classList.add("hidden"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("billModal").classList.add("hidden"); });
+
+// ---------------------------------------------------------------- farmer: products
+let newImg = "";
+function readImage(file){
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")){ reject(new Error("Please choose an image file.")); return; }
+    const rd = new FileReader();
+    rd.onerror = () => reject(new Error("Could not read the file."));
+    rd.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("This image format is not supported."));
+      img.onload = () => {
+        const s = Math.min(1, 800 / Math.max(img.width, img.height)), c = document.createElement("canvas");
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        resolve(c.toDataURL("image/jpeg", 0.82));
+      };
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(file);
+  });
+}
+$("pImg").onchange = async e => {
+  const f = e.target.files[0];
+  if (!f){ newImg = ""; $("pPrev").classList.add("hidden"); return; }
+  try { newImg = await readImage(f); $("pPrev").src = newImg; $("pPrev").classList.remove("hidden"); }
+  catch(err){ $("pErr").textContent = err.message; e.target.value = ""; newImg = ""; }
+};
+$("addForm").onsubmit = async e => {
+  e.preventDefault(); $("pErr").textContent = ""; $("addBtn").disabled = true;
+  const body = {name: $("pName").value.trim(), category: $("pCat").value, price: parseFloat($("pPrice").value), unit: $("pUnit").value.trim(),
+                qty: parseFloat($("pQty").value), organic: $("pOrg").checked, description: $("pDesc").value.trim()};
+  if (isNaN(body.price)) { $("pErr").textContent = "Enter your price."; $("addBtn").disabled = false; return; }
+  if (isNaN(body.qty)) { $("pErr").textContent = "Enter the quantity available."; $("addBtn").disabled = false; return; }
+  if (newImg) body.image_data = newImg;
+  try {
+    await api("/products", {method: "POST", body});
+    $("addForm").reset(); $("pUnit").value = "kg"; newImg = ""; $("pPrev").classList.add("hidden"); schedulePriceRef();
+    toast("Product added. Customers can see it now."); loadMyProducts();
+  } catch(err){ $("pErr").textContent = err.message; }
+  $("addBtn").disabled = false;
+};
+async function loadMyProducts(){
+  if (!me || me.role !== "farmer") return;
+  try { myProducts = (await api("/my/products")).products; renderMyProducts(); } catch(e){}
+}
+function renderMyProducts(){
+  const act = document.activeElement, focus = act && act.dataset && act.dataset.field ? {id: act.dataset.id, field: act.dataset.field} : null;
+  $("myList").innerHTML = myProducts.length ? myProducts.map(p => {
+    const d = editDraft[p.id] || {}, price = d.price != null ? d.price : p.price, qty = d.qty != null ? d.qty : p.qty;
+    return `<div class="mp">
+      ${p.image ? `<img src="${esc(API_BASE + "/" + p.image)}" alt="">` : `<div class="noimg">${EMOJI[p.category] || "🧺"}</div>`}
+      <div><strong>${esc(p.name)}</strong> <span class="muted">· ${esc(p.category)} · per ${esc(p.unit)}</span>
+        ${p.qty <= 0 ? '<span class="tag amber">Sold out</span>' : ""}${!p.active ? '<span class="tag amber">Hidden</span>' : ""}${p.organic ? '<span class="tag">Organic</span>' : ""}
+        <div class="ctl">
+          <label style="margin:0">₹ <input type="number" min="0.5" step="0.5" value="${esc(price)}" data-id="${p.id}" data-field="price"></label>
+          <label style="margin:0">Qty <input type="number" min="0" step="0.5" value="${esc(qty)}" data-id="${p.id}" data-field="qty"></label>
+          <button class="btn small" data-act="save" data-id="${p.id}">Save</button>
+          <button class="btn ghost small" data-act="photo" data-id="${p.id}">${p.image ? "Change photo" : "Add photo"}</button>
+          ${p.image ? `<button class="btn ghost small" data-act="rmphoto" data-id="${p.id}">Remove photo</button>` : ""}
+          <button class="btn ghost small" data-act="toggle" data-id="${p.id}">${p.active ? "Hide" : "Show"}</button>
+          <button class="btn danger small" data-act="del" data-id="${p.id}">Delete</button>
+        </div></div></div>`;
+  }).join("") : '<div class="muted">You have not listed anything yet. Add your first product above.</div>';
+  if (focus){ const el = document.querySelector(`#myList input[data-id="${focus.id}"][data-field="${focus.field}"]`); if (el){ el.focus(); } }
+}
+$("myList").addEventListener("input", e => {
+  const t = e.target; if (!t.dataset.field) return;
+  (editDraft[t.dataset.id] = editDraft[t.dataset.id] || {})[t.dataset.field] = t.value;
+});
+$("myList").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const id = +b.dataset.id, p = myProducts.find(x => x.id === id); if (!p) return;
+  const patch = async body => { try { await api("/products/" + id, {method: "PATCH", body}); delete editDraft[id]; await loadMyProducts(); toast("Saved."); } catch(err){ toast(err.message); } };
+  if (b.dataset.act === "save"){
+    const d = editDraft[id] || {};
+    const price = parseFloat(d.price != null ? d.price : p.price), qty = parseFloat(d.qty != null ? d.qty : p.qty);
+    if (isNaN(price) || isNaN(qty)){ toast("Enter a valid price and quantity."); return; }
+    patch({price, qty});
+  } else if (b.dataset.act === "toggle") patch({active: !p.active});
+  else if (b.dataset.act === "rmphoto") patch({remove_image: true});
+  else if (b.dataset.act === "photo"){
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
+    inp.onchange = async () => { try { patch({image_data: await readImage(inp.files[0])}); } catch(err){ toast(err.message); } };
+    inp.click();
+  } else if (b.dataset.act === "del"){
+    if (!confirm(`Delete ${p.name}? Orders already placed keep their bill.`)) return;
+    try { await api("/products/" + id, {method: "DELETE"}); delete editDraft[id]; await loadMyProducts(); } catch(err){ toast(err.message); }
+  }
+});
+
+// ---------------------------------------------------------------- farmer: price reference (RAG)
+const schedulePriceRef = debounce(() => priceRef(false), 400);
+const scheduleAiRef = debounce(() => priceRef(true), 1500);
+["pName","pUnit","pPrice"].forEach(id => $(id).addEventListener("input", () => { schedulePriceRef(); scheduleAiRef(); }));
+let refSeq = 0;
+async function priceRef(ai){
+  if (!me || me.role !== "farmer") return;
+  const name = $("pName").value.trim(), unit = $("pUnit").value.trim() || "kg", price = parseFloat($("pPrice").value);
+  const box = $("priceRef");
+  if (name.length < 2){ box.innerHTML = '<span class="muted">Type a product name to see the lowest and highest price for similar products.</span>'; return; }
+  const seq = ++refSeq;
+  const q = new URLSearchParams({name, unit}); if (!isNaN(price) && price > 0) q.set("price", price); if (ai) q.set("ai", "true");
+  try {
+    const r = await api("/price-reference?" + q.toString());
+    if (seq !== refSeq) return;   // a newer request has been made since
+    box.innerHTML = renderRef(r, price);
+  } catch(e){ if (!ai) box.innerHTML = `<span class="muted">${esc(e.message)}</span>`; }
+}
+function renderRef(r, price){
+  const h = r.headline, u = esc(r.unit);
+  let top;
+  if (h.basis === "none") top = '<strong>No similar products found yet.</strong>';
+  else {
+    const basis = h.basis === "market" ? `from ${r.market.count} similar listing${r.market.count === 1 ? "" : "s"} by other farmers` : "indicative reference range";
+    top = `<div class="rng"><span>Lowest ${money(h.min)}</span><span>Highest ${money(h.max)}</span></div>
+      ${(!isNaN(price) && h.max > h.min) ? `<div class="bar ${r.position === "within" ? "" : "out"}"><i style="left:calc(${Math.max(0, Math.min(100, (price - h.min) / (h.max - h.min) * 100))}% - 2px)"></i></div>` : '<div style="height:10px"></div>'}
+      <div class="muted">per ${u} · ${basis}${r.market.count ? ` · middle price ${money(r.market.median)}` : ""}</div>`;
+  }
+  const pos = r.position ? `<div style="margin-top:6px"><span class="tag ${r.position === "within" ? "" : "amber"}">Your price is ${r.position === "within" ? "within the range" : r.position + " the range"}</span></div>` : "";
+  const ref = (r.reference && h.basis === "market") ? `<div class="muted">Indicative reference: ${money(r.reference.min)} – ${money(r.reference.max)} per ${u} (rough guide, not live market data)</div>` : (h.basis === "reference" ? '<div class="muted">No other farmer has listed this yet, so this is a rough guide, not live market data.</div>' : "");
+  const sim = r.similar.length ? `<details style="margin-top:6px"><summary class="muted">Similar listings</summary>${r.similar.map(s => `<div class="muted">${esc(s.name)} · ${esc(s.area || "")} · ${money(s.price)} per ${u}</div>`).join("")}</details>` : "";
+  return `${top}${pos}${ref}<div style="margin-top:6px">${esc(r.advice)}${r.mode === "llm" ? ' <span class="muted">(AI explanation)</span>' : ""}</div>${sim}`;
+}
+
+// ---------------------------------------------------------------- live updates
+function dot(on){ $("liveDot").classList.toggle("on", on); }
+function startLive(){
+  if (es) es.close();
+  es = new EventSource(API_BASE + "/events");
+  es.onopen = () => dot(true); es.onerror = () => dot(false);
+  es.onmessage = ev => {
+    let v; try { v = JSON.parse(ev.data); } catch(e){ return; }
+    const prev = lastV; lastV = v;
+    if (!prev) return;
+    if (v.products !== prev.products){
+      if (!me || me.role === "customer") loadProducts(); else { loadMyProducts(); schedulePriceRef(); }
+    }
+    if (v.orders !== prev.orders) reloadOrders();
+  };
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  if (!me) loadProducts();
+  else { me.role === "customer" ? loadProducts() : loadMyProducts(); loadOrders(); }
+});
+
+// ---------------------------------------------------------------- chat assistant
+const chatLog = $("chatLog");
+function addMsg(text, cls){ const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; chatLog.appendChild(d); chatLog.scrollTop = chatLog.scrollHeight; return d; }
+$("chatBtn").onclick = () => { $("chatBox").classList.toggle("open"); if (!chatLog.children.length) addMsg("Hi! Ask me about products, prices, nearby farms, orders or delivery.", "bot"); $("chatInput").focus(); };
+$("chatClose").onclick = () => $("chatBox").classList.remove("open");
+$("chatForm").onsubmit = async e => {
+  e.preventDefault();
+  const text = $("chatInput").value.trim(); if (!text) return;
+  addMsg(text, "user"); $("chatInput").value = ""; $("chatSend").disabled = true;
+  const wait = addMsg("Thinking...", "bot");
+  const loc = gps || lastOrigin;
+  try {
+    const r = await api("/chat", {method: "POST", body: {question: text, lat: loc ? loc.lat : null, lng: loc ? loc.lng : null}});
+    wait.textContent = r.answer;   // textContent: replies can never inject HTML
+  } catch(err){ wait.className = "msg bad"; wait.textContent = err.message; }
+  $("chatSend").disabled = false;
+};
+
+boot();
+</script>
+</body>
+</html>
+

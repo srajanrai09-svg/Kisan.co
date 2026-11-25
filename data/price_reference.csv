@@ -1,0 +1,78 @@
+name,unit,min,max
+Tomato,kg,20,60
+Onion,kg,20,55
+Potato,kg,20,50
+Carrot,kg,30,70
+Beetroot,kg,25,60
+Cabbage,kg,15,40
+Cauliflower,piece,20,60
+Brinjal,kg,25,60
+Okra,kg,35,80
+Green Chilli,kg,40,120
+Capsicum,kg,40,100
+Cucumber,kg,20,50
+French Beans,kg,40,100
+Green Peas,kg,60,140
+Bottle Gourd,piece,15,45
+Ridge Gourd,kg,30,70
+Bitter Gourd,kg,35,80
+Pumpkin,kg,15,40
+Radish,kg,15,45
+Drumstick,kg,50,160
+Ginger,kg,60,200
+Garlic,kg,80,300
+Sweet Potato,kg,25,65
+Sweet Corn,piece,8,25
+Spinach,bunch,10,30
+Coriander Leaves,bunch,8,30
+Mint Leaves,bunch,8,25
+Curry Leaves,bunch,5,20
+Lemon,kg,50,180
+Banana,dozen,35,90
+Raw Banana,kg,20,50
+Mango,kg,50,200
+Papaya,kg,20,60
+Pomegranate,kg,80,220
+Grapes,kg,50,150
+Guava,kg,30,90
+Watermelon,kg,10,35
+Pineapple,piece,25,80
+Orange,kg,50,130
+Apple,kg,100,250
+Coconut,piece,20,55
+Tender Coconut,piece,25,60
+Milk,litre,45,75
+Cow Milk,litre,45,70
+Buffalo Milk,litre,55,90
+Curd,kg,60,110
+Paneer,kg,280,420
+Ghee,kg,550,1000
+Butter,kg,450,650
+Eggs,dozen,60,130
+Country Eggs,dozen,90,200
+Chicken,kg,150,320
+Country Chicken,kg,300,550
+Rice,kg,40,90
+Wheat,kg,28,60
+Ragi,kg,40,95
+Jowar,kg,40,80
+Bajra,kg,30,70
+Maize,kg,18,45
+Toor Dal,kg,100,190
+Moong Dal,kg,90,160
+Chana Dal,kg,70,130
+Urad Dal,kg,100,180
+Groundnut,kg,90,180
+Turmeric,kg,100,260
+Black Pepper,kg,500,1100
+Cardamom,kg,1500,3500
+Cumin Seeds,kg,250,600
+Coriander Seeds,kg,90,200
+Dry Red Chilli,kg,150,450
+Tamarind,kg,100,260
+Honey,kg,350,900
+Jaggery,kg,50,120
+Marigold,kg,40,160
+Jasmine,kg,300,1200
+Rose,kg,100,300
+

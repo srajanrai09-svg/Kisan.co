@@ -1,0 +1,12 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+data/uploads/
+data/index_v2/
+data/secret.key
+data/market_v2.db
+data/market_v2.db-shm
+data/market_v2.db-wal
+*.db
+
