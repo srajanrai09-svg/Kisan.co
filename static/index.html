@@ -899,7 +899,7 @@ function startLive(){
     if (v.products !== prev.products){
       if (!me || me.role === "customer") loadProducts(); else { loadMyProducts(); schedulePriceRef(); }
     }
-    if (v.orders !== prev.orders) reloadOrders();
+    if (v.orders !== prev.orders){ reloadOrders(); loadAbout(); }
   };
 }
 document.addEventListener("visibilitychange", () => {
