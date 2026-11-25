@@ -153,10 +153,48 @@
   footer{border-top:1px solid var(--line);margin-top:30px}
   .card{cursor:pointer;transition:transform .16s ease,border-color .16s ease}.card:hover{transform:translateY(-3px);border-color:#c9bfae}
   .metric{font:400 clamp(2.5rem,8vw,5rem) "Instrument Serif",Georgia,serif;color:#496b52}
+  /* Refined storefront palette and layout */
+  :root{--green:#526c56;--green-d:#3c5140;--light:#e9eee7;--ink:#262a25;--muted:#72766e;--bg:#f6f5f0;--line:#e4e2d9;--accent:#b8765e;--card:#fffefa}
+  body{background:var(--bg);color:var(--ink);font-size:16px;line-height:1.6}
+  .announce{background:#303831;color:#f5f3ec;letter-spacing:.035em;padding:9px 14px}
+  header{position:sticky;top:0;z-index:30;background:rgba(248,247,242,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(80,90,76,.12);padding:14px clamp(16px,4vw,54px)}
+  header h1{font-size:2rem;color:var(--green-d)}
+  nav button,#guestChip button{border-color:#d9ddd4;color:var(--ink);background:transparent;padding:9px 15px;transition:background .18s ease,color .18s ease,transform .18s ease}
+  nav button:hover,#guestChip button:hover{background:#e9eee7;transform:translateY(-1px)}
+  nav button.active,#guestChip button.solid{background:var(--green);border-color:var(--green);color:white}
+  #userChip{color:var(--ink)} #logoutBtn{color:var(--ink)!important;border-color:#d9ddd4!important;background:transparent!important}
+  main{max-width:1220px;padding:clamp(16px,3vw,34px)}
+  .hero{min-height:440px;border-radius:26px;padding:clamp(24px,5vw,58px);position:relative;overflow:hidden;background:linear-gradient(90deg,rgba(26,34,27,.72),rgba(33,39,30,.14) 78%),url(/img/hero.jpg) center/cover;box-shadow:0 20px 55px rgba(42,48,38,.12)}
+  .hero h2{max-width:680px;font-size:clamp(3rem,7vw,5.6rem);letter-spacing:-.025em}
+  .hero p{max-width:520px}.hero .eb{color:#e6d8bd}
+  .hero .btn{background:#f5f1e7;color:#354335;border:1px solid rgba(255,255,255,.55);padding:13px 24px}
+  .hero-count{position:absolute;right:clamp(18px,4vw,46px);top:clamp(18px,4vw,42px);min-width:190px;padding:18px 22px;border:1px solid rgba(255,255,255,.38);border-radius:18px;background:rgba(248,247,242,.9);color:#303831;backdrop-filter:blur(10px)}
+  .hero-count b{display:block;font:400 2.8rem/1.1 "Instrument Serif",Georgia,serif;color:var(--green-d)}
+  .hero-count span{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:#687064}
+  .home-about{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,.7fr);gap:24px;align-items:center;background:#ecefe8;border:1px solid #e0e5dc;border-radius:22px;padding:clamp(22px,4vw,38px);margin:0 0 30px}
+  .home-about h2{font-size:clamp(2rem,4vw,3rem);margin:4px 0 10px;color:#394b3d}
+  .home-about p{max-width:700px;margin:0;color:#626a60}.home-about .about-proof{border-left:1px solid #cfd8cc;padding-left:24px;color:#596657}
+  .home-about .btn{margin-top:16px}.toolbar{gap:12px;margin:24px 0 14px}
+  input,select,textarea{border-color:#dedfd6;border-radius:12px;background:#fffefa;padding:12px 14px;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:3px solid rgba(82,108,86,.18);border-color:var(--green)}
+  .toolbar input,.toolbar select{border-radius:999px;padding:13px 18px}
+  .btn{background:var(--green);border:1px solid var(--green);border-radius:999px;padding:11px 20px;color:#fff;font-weight:600;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+  .btn:hover{background:var(--green-d);transform:translateY(-1px);box-shadow:0 7px 16px rgba(44,63,47,.14)}
+  .btn.ghost{background:transparent;color:var(--green-d);border-color:#cdd5ca}.btn.ghost:hover{background:#e9eee7;box-shadow:none}
+  .btn.danger{background:#fff8f5;color:#a54e3d;border-color:#e7c9bf}
+  .grid{gap:18px}.card,.panel,.order,.bill{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 5px 18px rgba(45,49,40,.035)}
+  .card{padding:14px;gap:8px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translateY(-3px);border-color:#cbd5c8;box-shadow:0 13px 30px rgba(45,49,40,.08)}
+  .card .photo,.card .noimg{height:210px;border-radius:13px}.card h3{font-size:1.5rem;line-height:1.15;margin-top:5px}
+  .price{color:var(--green-d);font-size:1.2rem}.tag{background:#e9eee7;color:#4b654f;border-radius:999px;padding:4px 10px}
+  .tag.amber{background:#f4ece1;color:#8d6940}.qty button{border-color:#d6ded3;color:var(--green-d);background:#f4f6f1;transition:background .16s ease}
+  .qty button:hover{background:#e1e9df}.status{background:#edf1e9;border-radius:12px;padding:11px 15px}.status.warn{background:#f6eee3}
+  .metric{color:var(--green-d)}.panel{padding:22px}footer{padding:26px 16px;color:#73766f}
+  @media(max-width:680px){.hero{min-height:500px;align-items:flex-end}.hero-count{top:16px;left:16px;right:auto;min-width:150px;padding:13px 16px}.hero-count b{font-size:2.2rem}.home-about{grid-template-columns:1fr}.home-about .about-proof{border-left:0;border-top:1px solid #cfd8cc;padding:16px 0 0}}
 </style>
 </head>
 <body>
-<div class="announce">Fresh from nearby farmers · Pay the farmer on delivery · Picked fresh every morning</div>
+<div class="announce">Local harvest · Direct from farmers · Sales count reflects completed deliveries</div>
 <header>
   <div class="brand"><h1>Kisan.co</h1><small>Local Farmer Market</small></div>
   <nav id="nav"></nav>
@@ -212,7 +250,8 @@
   <!-- ============ CUSTOMER ============ -->
   <section id="customer" class="hidden">
     <div id="tab-shop" class="tab">
-      <div class="hero"><div><p class="eb">This season</p><h2>Fresh from the farm</h2><p>Vegetables, fruits, grains and dairy from farmers near you, sorted nearest first.</p><button class="btn" type="button" onclick="document.getElementById('q').scrollIntoView({behavior:'smooth',block:'center'})">Shop fresh today</button></div></div>
+      <div class="hero"><div><p class="eb">Grown nearby · Sold directly</p><h2>Good food, closer to home.</h2><p>Browse harvests listed by local farmers. See what is available, compare details and order directly from the farm.</p><button class="btn" type="button" onclick="document.getElementById('q').scrollIntoView({behavior:'smooth',block:'center'})">Explore the harvest</button></div><div class="hero-count" aria-live="polite"><b id="homeSoldCount">—</b><span>completed deliveries</span></div></div>
+      <section class="home-about" aria-labelledby="homeAboutTitle"><div><p class="eb" style="margin:0;color:#72816f;font-size:.76rem;letter-spacing:.13em;text-transform:uppercase">About Kisan.co</p><h2 id="homeAboutTitle">A more direct way to shop local.</h2><p>Farmers list their own products, customers order from those listings, and the market records a sale only after delivery is confirmed. Ratings come from completed purchases; no testimonials or sales are filled in for display.</p><button class="btn ghost small" type="button" id="homeAboutMore">How the marketplace works</button></div><div class="about-proof"><strong>Clear product details</strong><p>Descriptions, available stock and verified purchase ratings appear with each listing.</p><strong>Sales counted from records</strong><p id="homeSalesNote">Only completed deliveries are counted.</p></div></section>
       <div id="guestNote" class="guestNote hidden">👋 You are browsing as a guest. <a href="#" id="guestNoteLogin">Log in or register</a> (at the side) when you want to order. Farmers also list their produce after logging in.</div>
       <div class="toolbar">
         <input id="q" type="search" placeholder="Search tomato, mango, a farm or a place..." aria-label="Search products">
@@ -247,7 +286,7 @@
       <h2 style="margin-top:0">My orders</h2>
       <div id="cOrders"></div>
     </div>
-    <div id="tab-about" class="tab hidden"><div class="panel"><p class="muted">OUR MARKET</p><h2>Grown nearby. Shared honestly.</h2><p>Kisan.co helps local farmers list their harvest and lets customers buy directly from them. Product availability and sales figures come from marketplace records.</p><div class="metric" id="soldCount">—</div><strong>confirmed deliveries</strong><p class="muted" id="salesNote">Only delivered orders are counted. No sample sales or testimonials are included.</p><div id="aboutOrders" class="muted"></div></div></div>
+    <div id="tab-about" class="tab hidden"><div class="panel"><p class="muted">OUR MARKET</p><h2>A local marketplace with transparent records.</h2><p>Kisan.co connects customer orders with products listed by farmers. This count updates from delivered orders confirmed with a delivery OTP.</p><div class="metric" id="soldCount">—</div><strong>confirmed deliveries</strong><p class="muted" id="salesNote">No pending or cancelled orders are included.</p><div id="aboutOrders" class="muted"></div></div></div>
     <div id="tab-detail" class="tab hidden"><button class="btn ghost small" type="button" id="detailBack">← Back to shop</button><div id="productDetail" class="panel"></div><h2>More from nearby farms</h2><div id="relatedProducts" class="grid"></div></div>
   </section>
 
@@ -380,7 +419,7 @@ function showGuest(){
   $("guestNote").classList.remove("hidden");
   $("nav").innerHTML = ""; setTab("shop");
   closeAuth(); resetAuthForms();
-  startLive(); renderProducts(); loadProducts();
+  startLive(); renderProducts(); loadProducts(); loadAbout();
   if (!gpsDenied) getGps(true);
 }
 function resetAuthForms(){
@@ -426,7 +465,7 @@ function enterApp(){
   if (isF){ setTab(["fprod","forders","ffeedback","profile"].includes(requested) ? requested : "fprod"); loadMyProducts(); loadOrders(); schedulePriceRef(); }
   else {
     $("oAddr").value = me.address || ""; $("oPin").value = me.pincode || "";
-    setTab(["shop","cart","corders","about","profile"].includes(requested) ? requested : "shop"); loadProducts(); loadOrders(); renderCart();
+    setTab(["shop","cart","corders","about","profile"].includes(requested) ? requested : "shop"); loadProducts(); loadOrders(); renderCart(); loadAbout();
     if (!gpsDenied) getGps(true);
   }
 }
@@ -446,6 +485,7 @@ function setTab(name, updateUrl = true){
 }
 window.addEventListener("popstate", () => { let name = location.hash.replace(/^#\//, "") || (me?.role === "farmer" ? "fprod" : "shop"); if (name === "detail" && !selectedProduct) name = "shop"; if ($("tab-" + name)) setTab(name, false); });
 $("aboutLink").onclick = e => { e.preventDefault(); setTab("about"); window.scrollTo(0,0); };
+$("homeAboutMore").onclick = () => { setTab("about"); window.scrollTo(0,0); };
 function setBadge(tab, n){ const b = $("bd-" + tab); if (!b) return; b.textContent = n; b.classList.toggle("hidden", !n); }
 $("logoutBtn").onclick = () => logout(false);
 
@@ -651,7 +691,7 @@ function renderCustomerOrders(){
   }).join("") : '<div class="panel muted">You have not placed any orders yet.</div>';
 }
 $("cOrders").addEventListener("submit", async e=>{const form=e.target.closest(".feedback-form");if(!form)return;e.preventDefault();const fd=new FormData(form);try{await api(`/orders/${form.dataset.order}/feedback`,{method:"POST",body:{rating:Number(fd.get("rating")),comment:fd.get("comment")||""}});toast("Thanks. Your purchase feedback was sent.");await loadOrders();}catch(err){toast(err.message);}});
-async function loadAbout(){try{const r=await api("/about",{auth:false});salesSummary=r.sold;$("soldCount").textContent=Number(r.sold.orders).toLocaleString("en-IN");$("aboutOrders").textContent=r.statement;}catch(e){$("soldCount").textContent="—";}}
+async function loadAbout(){try{const r=await api("/about",{auth:false});salesSummary=r.sold;const count=Number(r.sold.orders).toLocaleString("en-IN");$("soldCount").textContent=count;$("homeSoldCount").textContent=count;$("aboutOrders").textContent=r.statement;$("homeSalesNote").textContent=r.statement;}catch(e){$("soldCount").textContent="—";$("homeSoldCount").textContent="—";}}
 async function loadFarmerFeedback(){try{const r=await api("/farmer/feedback");$("farmerFeedback").innerHTML=r.feedback.length?r.feedback.map(f=>`<article class="panel"><strong>★ ${f.rating}/5 · ${esc(f.customer_name)} · ${when(f.created_at)}</strong><p>${esc(f.comment||"No written comment.")}</p>${f.admin_reply?`<div class="status">Market team response: ${esc(f.admin_reply)} · ${when(f.replied_at)}</div>`:'<p class="muted">The market team has not replied yet.</p>'}</article>`).join(""):'<p class="panel muted">No verified purchase feedback yet.</p>';$("farmerComplaints").innerHTML=r.complaints.length?r.complaints.map(c=>`<article class="panel"><strong>${esc(c.subject)} · ${when(c.created_at)}</strong><p>${esc(c.message)}</p>${c.admin_reply?`<div class="status">Market team response: ${esc(c.admin_reply)} · ${when(c.replied_at)}</div>`:'<p class="muted">Awaiting response.</p>'}</article>`).join(""):'<p class="panel muted">No complaints submitted.</p>';}catch(e){$("farmerFeedback").textContent=e.message;}}
 $("complaintForm").onsubmit=async e=>{e.preventDefault();$("complaintErr").textContent="";try{await api("/farmer/complaints",{method:"POST",body:{subject:$("complaintSubject").value.trim(),message:$("complaintMessage").value.trim()}});$("complaintForm").reset();toast("Complaint sent to the market team.");loadFarmerFeedback();}catch(err){$("complaintErr").textContent=err.message;}};
 function loadProfile(){if(!me)return;$("profileName").value=me.name||"";$("profileFarm").value=me.farm_name||"";$("profileArea").value=me.area||"";$("profileAddress").value=me.address||"";$("profilePin").value=me.pincode||"";$("profileFarmBlock").classList.toggle("hidden",me.role!=="farmer");$("profileFarmBlock").style.display=me.role==="farmer"?"block":"none";}

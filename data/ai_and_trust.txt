@@ -1,0 +1,12 @@
+AI AND TRUST: MARKETPLACE ASSISTANT
+The assistant searches active farmer listings and the text guides in the data folder. Ollama can write an answer from retrieved records. If Ollama is unavailable, a local keyword and hash-vector search returns catalogue matches. The assistant must say when the guides and live listings do not contain an answer and must not invent a product, sale, rating, or policy.
+
+AI AND TRUST: CUSTOMER FEEDBACK SUMMARY
+An administrator can request a summary of submitted purchase feedback. When the local Ollama text model is available, it summarizes the comments and reports the rating counts. The original comments remain visible for checking. The summary is an aid to the administrator and is not a substitute for reading customer feedback.
+
+AI AND TRUST: PRODUCT IMAGE COMPARISON
+The optional local Ollama vision model compares a listed product name and description with its uploaded photo. It returns a visual-consistency suggestion of consistent, possible mismatch, or uncertain. It cannot confirm freshness, source, authenticity, ownership, or seller identity. It never publishes products, hides listings, or blocks people automatically. An administrator reviews the listing and photo.
+
+AI AND TRUST: IDENTITY LIMITS
+The marketplace does not use face recognition or the product photo model to decide whether a person is fake. Identity and account disputes require human review and appropriate verification procedures. The AI should not infer a person's identity or intent from a product image.
+

@@ -30,7 +30,7 @@ uvicorn app.main:app --port 8000
 ```
 Open **http://localhost:8000/** (or double-click `run.bat`). Use a single worker: live updates are kept in the server's memory.
 
-For AI answers install Ollama and run `ollama pull llama3.2:3b` and `ollama pull nomic-embed-text`. For PostGIS and Redis run `docker compose up -d postgis redis`. Road routing needs a map extract (see `docker-compose.yml`). FAISS is optional: `pip install faiss-cpu` on Python 3.9 to 3.12; without it an exact NumPy search is used.
+For AI answers install Ollama and run `ollama pull llama3.2:3b` and `ollama pull nomic-embed-text`. For admin product-photo comparison, also run `ollama pull llava:7b` (or set `VISION_MODEL` to another Ollama vision model). For PostGIS and Redis run `docker compose up -d postgis redis`. Road routing needs a map extract (see `docker-compose.yml`). FAISS is optional: `pip install faiss-cpu` on Python 3.9 to 3.12; without it an exact NumPy search is used.
 
 ## Try the whole flow (2 minutes)
 1. Window 1: **Register** as a **Farmer**, press *Use my farm's location*, then add a product (try "Tomato", 40, 20 kg, with a photo).
@@ -68,7 +68,7 @@ A pincode is placed on the map from farms registered in it. If none is, and inte
 
 ## Files
 - `app/main.py` API · `db.py` SQLite · `geo.py` PostGIS, OSRM, pincodes · `rag.py` customer assistant · `pricing.py` farmer price reference · `security.py` passwords, sessions, OTP · `events.py` live updates
-- `static/index.html` the website · `data/faq.txt` what the assistant knows about how the site works · `data/price_reference.csv` indicative prices
+- `static/index.html` the website · all `data/*.txt` files are indexed as assistant guides · `data/price_reference.csv` indicative prices
 - Data is created in `data/` on first run (`market_v2.db`, `uploads/`, `index_v2/`, `secret.key`). Delete `market_v2.db` and `uploads/` to start from an empty market. An older `market.db` or `index/` folder from the previous version is no longer used and can be deleted.
 
 ## Before you put this on the internet
@@ -111,7 +111,7 @@ Forgot the password? Run `python set_admin_password.py` again. Setting it logs e
 - **About Kisan.co** counts orders completed with the delivery OTP. It does not count pending, cancelled, or unpaid checkouts as sales.
 - Customers can submit one rating per delivered order. Admin replies are visible to that customer and the farmer.
 - Farmers can submit complaints and read the market team's replies in **Feedback & help**. Admins can review and reply from **Feedback & complaints** and can block/unblock accounts from **Users**.
-- Shop, product detail, cart, orders, About, profile, farmer orders, and farmer help have separate browser-history routes. Product details show other currently listed products below.
+- The main Shop page shows the real completed-delivery counter and About section above the listings. Shop, product detail, cart, orders, About, profile, farmer orders, and farmer help have separate browser-history routes. Product details show other currently listed products below.
 - Stock is checked and decremented inside one SQLite write transaction. If several people submit at the same time for the last unit, the first successful transaction gets it and later requests receive an out-of-stock message. This is immediate pay-on-delivery ordering; the app does not yet implement timed holds or online payment confirmation.
 
 ## Before deployment: integrations still needed
@@ -119,7 +119,7 @@ This archive is a FastAPI server with SQLite, not a Netlify-only static site. Ne
 
 Phone ownership verification at signup and timed `available → reserved → committed` payment holds also need an SMS verification provider and payment provider with server-side webhooks. The existing delivery OTP only confirms handover. Do not count a checkout as a sale until payment/delivery is confirmed.
 
-The current AI feature uses local Ollama for marketplace text answers and price explanations. It does not verify identity or determine that a person is fake. Image similarity can be used as a review signal after choosing a local vision model and testing it with real labeled product photos; it should not automatically accuse or block a person. Admin account blocking and product moderation remain human/admin decisions.
+The assistant indexes every curated `data/*.txt` guide plus live catalogue records. Add factual guides there and use **System & AI → Rebuild index now** to refresh the search index. The admin product list includes **AI image check** when a product has a photo; it compares the photo with the listing text using the configured local Ollama vision model. This is a suggestion only. It does not verify identity, freshness, origin, or authenticity and does not publish, hide, or block automatically. Administrators review the original listing before acting. The feedback page also summarizes real submitted reviews with the local text model when it is available.
 
 The requested admin password is checked by the setup script for length, mixed case, and a number, then stored as a salted hash. It is not embedded in source code. Since the requested password was shared in this conversation, choose a different private password before using an internet-facing admin panel. Anyone with server/database access or control of the source can ultimately change server-side code; keep deployment and database access limited to trusted maintainers.
 

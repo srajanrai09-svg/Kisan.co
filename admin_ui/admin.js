@@ -106,10 +106,17 @@ RENDER.products = async () => {
       <td>${esc(p.name)}<br><span class="muted">${esc(p.category)}</span></td><td>${esc(p.farm)}<br><span class="muted">${esc(p.farmer_phone)}</span></td>
       <td>${money(p.price)} / ${esc(p.unit)}</td><td>${esc(p.qty)}</td>
       <td>${p.active ? tag("Live", "green") : tag("Hidden", "amber")} ${p.farmer_blocked ? tag("farmer blocked", "red") : ""}</td>
-      <td><button class="btn small danger" data-act="delprod" data-id="${p.id}">Remove</button></td></tr>`).join("") + `</tbody></table></div>`;
+      <td>${p.image ? `<button class="btn small ghost" data-act="verifyimage" data-id="${p.id}">AI image check</button> ` : ""}<button class="btn small danger" data-act="delprod" data-id="${p.id}">Remove</button></td></tr>`).join("") + `</tbody></table></div>`;
   filterable("q", "tr.row");
 };
 ACTIONS.delprod = d => confirm("Remove this product permanently?") && act(() => api(`/products/${d.id}`, {method: "DELETE"}), "Product removed.");
+ACTIONS.verifyimage = async d => {
+  try {
+    const r = await api(`/products/${d.id}/verify-image`, {method:"POST"});
+    const verdict = {consistent:"looks consistent", possible_mismatch:"possible mismatch", uncertain:"uncertain"}[r.verdict] || "uncertain";
+    say(`AI suggestion: ${verdict}. ${r.reason} Human review required; no product or account action was taken.`, r.verdict === "consistent");
+  } catch (e) { say(e.message); }
+};
 
 let orderFilter = "";
 RENDER.orders = async () => {
@@ -174,10 +181,12 @@ RENDER.system = async () => {
   const yn = (v, label) => `<tr><td>${label}</td><td>${v ? tag("on", "green") : tag("off", "amber")}</td></tr>`;
   $("view").innerHTML = `<div class="card"><h2>Services</h2><table><tbody>` +
     yn(s.sqlite, "SQLite database") + yn(s.ollama, "Ollama (AI answers and embeddings)") + yn(s.faiss, "FAISS vector search (else exact NumPy search)") +
+    yn(s.vision?.available, `Product photo model (${esc(s.vision?.model || "not configured")})`) +
     yn(s.cache === "redis", "Redis cache (else in-memory)") + yn(s.postgis, "PostGIS (nearby farms)") + yn(s.osrm, "OSRM (road routes)") +
     `</tbody></table></div>
     <div class="card"><h2>Assistant search index (RAG)</h2><p>Documents: <b>${esc(ix.count)}</b> · Embedder: <b>${esc(ix.embedder)}</b> · Built: ${esc(ix.built_at)}</p>
-    <p class="muted">The embedder "hash" means Ollama was not running, so a simple built-in matcher is used. It is rebuilt automatically when products change.</p>
+    <p class="muted">The embedder "hash" means Ollama was not running, so a simple built-in matcher is used. It is rebuilt automatically when products change. Product photo comparison uses a separate local vision model and always needs human review.</p>
+    <p class="muted">Vision setup: <code>${esc(s.vision?.setup || "Configure VISION_MODEL")}</code></p>
     <button class="btn" data-act="reindex">Rebuild index now</button>
     <h2>Test what the assistant retrieves</h2><div class="bar"><input id="rq" type="search" placeholder="e.g. cheapest tomatoes, organic honey"><button class="btn" data-act="ragtest">Test</button></div><div id="ragOut"></div></div>
     <div class="card"><h2>Test price reference</h2><p class="muted">Reference rows loaded from data/price_reference.csv: ${esc(s.reference_rows)}</p>
@@ -188,8 +197,8 @@ ACTIONS.reindex = () => act(async () => { const r = await api("/rag/reindex", {m
 ACTIONS.ragtest = async () => {
   try {
     const r = await api("/rag/test", {method: "POST", body: {question: $("rq").value}});
-    $("ragOut").innerHTML = `<div class="wrap"><table><thead><tr><th>Score</th><th>Type</th><th>Text</th></tr></thead><tbody>` +
-      r.results.map(x => `<tr><td>${x.score}</td><td>${esc(x.type)}</td><td>${esc(x.text)}</td></tr>`).join("") + `</tbody></table></div>`;
+    $("ragOut").innerHTML = `<div class="wrap"><table><thead><tr><th>Score</th><th>Type</th><th>Source</th><th>Text</th></tr></thead><tbody>` +
+      r.results.map(x => `<tr><td>${x.score}</td><td>${esc(x.type)}</td><td>${esc(x.source || "live catalogue")}</td><td>${esc(x.text)}</td></tr>`).join("") + `</tbody></table></div>`;
   } catch (e) { say(e.message); }
 };
 ACTIONS.pricetest = async () => {

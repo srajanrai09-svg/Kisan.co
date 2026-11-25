@@ -1,0 +1,15 @@
+CUSTOMER GUIDE: SHOPPING AND PRODUCT RATINGS
+Browse the Shop page without signing in. To add a product to the cart or place an order, register or log in as a customer. A product listing shows the farmer's name, price, unit, available stock, description, and distance when location is available.
+
+CUSTOMER GUIDE: PURCHASE FEEDBACK
+Customers can submit one rating and optional written feedback after an order is delivered and its delivery OTP is confirmed. Ratings shown on product listings come from these completed purchases. If there are no ratings, the site says that no customer ratings are available; it does not create example reviews.
+
+CUSTOMER GUIDE: ABOUT AND SALES COUNTER
+The About section on the main Shop page displays the count of completed deliveries. The counter is based on marketplace order records with delivered status. Pending, cancelled, and unconfirmed orders are excluded. A counter of zero means no delivery has been confirmed yet.
+
+CUSTOMER GUIDE: DELIVERY LOCATION
+Allow browser location access to sort nearby products, or enter a 6-digit pincode. A customer's exact home location is not stored or shown to farmers. If a pincode cannot be placed on the map, the site may sort by matching pincode digits and says when it uses that fallback.
+
+CUSTOMER GUIDE: PAYMENT AND ORDER STATUS
+This version does not take online payment. The customer pays the farmer directly on delivery by an agreed method. When the customer places an order, stock is checked and deducted in one database transaction. The app does not yet offer a timed unpaid checkout hold or payment-based reserved and committed states.
+

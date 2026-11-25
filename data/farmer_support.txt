@@ -1,0 +1,12 @@
+FARMER GUIDE: LISTING PRODUCTS
+Farmers create their own listings from My Products. A listing includes product name, category, price, unit, available quantity, description, and an optional product photo. The app does not invent products or product ratings.
+
+FARMER GUIDE: EDITING STOCK AND ORDERS
+Farmers can edit their listing quantity or hide a product. New orders appear in Orders. Accept an order, mark it Out for delivery, hand over the items, and enter the customer's delivery OTP to confirm completion. The customer should share the OTP only at handover.
+
+FARMER GUIDE: COMPLAINTS AND ADMIN REPLIES
+Use Feedback & help to send a complaint to the market team and read its response. The complaint stays in the account history. An administrator reviews complaints and can reply. Administrators can also block customer or farmer accounts from the Users page; the AI assistant does not block accounts.
+
+FARMER GUIDE: PRODUCT PHOTO REVIEW
+An administrator can ask the optional local vision model to compare a product's photo with its product name and description. The result is only a suggestion. It cannot verify where an item came from, prove authenticity, or identify a seller. A person must review the original listing before taking action.
+

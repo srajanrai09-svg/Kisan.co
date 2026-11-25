@@ -12,6 +12,7 @@ UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", DATA_DIR / "uploads"))
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.2:3b")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "nomic-embed-text")
+VISION_MODEL = os.getenv("VISION_MODEL", "llava:7b")
 
 # Redis cache
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")

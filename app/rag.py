@@ -27,7 +27,7 @@ except ImportError:
 log = logging.getLogger("rag")
 
 HASH_DIM = 384
-INDEX_VERSION = 2   # bump when the way documents are written or ranked changes: old indexes are rebuilt on start
+INDEX_VERSION = 3   # bump when the way documents are written or ranked changes: old indexes are rebuilt on start
 # Words that say what the customer wants to know, not which product. They appear in many FAQ answers, so they are
 # not used as evidence that a document is about the product the customer named.
 GENERIC = {"price", "cost", "rate", "much", "cheap", "cheapest", "cheaper", "buy", "sell", "near", "nearby",
@@ -124,7 +124,7 @@ def _query_vec(question):
 
 # ---------------------------------------------------------------- index
 def build_docs():
-    """Turn the live catalogue and faq.txt into small text chunks. Farmer-written text is cleaned first."""
+    """Turn the live catalogue and every curated data/*.txt guide into RAG chunks."""
     docs = []
     farms = {f["id"]: f for f in db.farms()}
     products = db.products()
@@ -150,11 +150,11 @@ def build_docs():
         docs.append({"type": "category", "keys": ["organic"], "text": "Organic products available: " + ", ".join(organic) + "."})
     if not products:
         docs.append({"type": "category", "text": "No farmer has listed any product yet."})
-    faq = config.DATA_DIR / "faq.txt"
-    if faq.exists():
-        for block in re.split(r"\n\s*\n", faq.read_text(encoding="utf-8").strip()):
+    for guide in sorted(config.DATA_DIR.glob("*.txt")):
+        for block in re.split(r"\n\s*\n", guide.read_text(encoding="utf-8").strip()):
             if block.strip():
-                docs.append({"type": "faq", "text": block.strip()})
+                docs.append({"type": "faq" if guide.name == "faq.txt" else "guide",
+                             "source": guide.name, "text": block.strip()})
     return docs
 
 
@@ -292,7 +292,7 @@ def answer(question, lat=None, lng=None):
     loc_line = ("Farms nearest to the customer: " + _near_line(near)) if near else (
         "Customer location: not shared." if not has_loc else "No farms with stock found near the customer.")
     context = loc_line + "\n" + "\n".join(f"- {d['text']}" for d in docs)
-    sources = [{"type": d["type"], "text": d["text"]} for d in docs[:4]]
+    sources = [{"type": d["type"], "source": d.get("source", "live catalogue"), "text": d["text"]} for d in docs[:4]]
     try:
         text = _ollama_chat(SYSTEM, f"Context:\n{context}\n\nCustomer question: {q}")
         res = {"answer": text, "mode": "llm", "sources": sources}

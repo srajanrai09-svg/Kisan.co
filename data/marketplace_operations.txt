@@ -1,0 +1,12 @@
+MARKETPLACE OPERATIONS: SIMULTANEOUS ORDERS
+When customers submit orders at the same time, the database serializes the stock update in a write transaction. The first request that can reserve the available quantity succeeds. A later request that exceeds the remaining quantity receives an out-of-stock message. This prevents the last unit from being sold twice.
+
+MARKETPLACE OPERATIONS: CURRENT STOCK STATES
+The current pay-on-delivery version deducts stock when an order is placed. It does not implement an unpaid reservation timeout, payment confirmation, or the requested available, reserved, and committed payment lifecycle. Do not tell customers that unpaid stock holds or online payments are supported.
+
+MARKETPLACE OPERATIONS: DELIVERY CONFIRMATION
+The farmer's delivery OTP confirms handover. The customer sees the OTP on their own order page after the farmer marks the order Out for delivery. The farmer needs the OTP to mark the order delivered. Failed OTP attempts are limited.
+
+MARKETPLACE OPERATIONS: MAP AND DISTANCE
+The site sorts by distance from browser GPS, a pincode, or a saved pincode. Farm coordinates are kept private from customers; customer home coordinates are not saved. Road distance and time use OSRM when available. If a routing service is unavailable, the site shows an estimate based on straight-line distance.
+

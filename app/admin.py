@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, Field
 
-from . import config, db, events, geo, images, pricing, rag, security
+from . import config, db, events, geo, images, pricing, rag, security, vision
 from .cache import cache
 from .textutil import clean_text
 
@@ -218,6 +218,24 @@ def products(_=Depends(admin_required)):
                               created_at=ts(p["created_at"])) for p in db.admin_products()]}
 
 
+@router.post("/admin-api/products/{pid}/verify-image")
+def verify_product_image(pid: int, request: Request, _=Depends(admin_required)):
+    product = db.get_product(pid)
+    if not product:
+        raise HTTPException(404, "Product not found.")
+    if not product.get("image"):
+        raise HTTPException(409, "This product has no image to compare.")
+    image_path = config.UPLOAD_DIR / Path(product["image"]).name
+    try:
+        result = vision.compare_product_image(product["name"], product.get("description", ""), image_path)
+    except vision.VisionUnavailable as e:
+        raise HTTPException(503, str(e))
+    except httpx.HTTPError:
+        raise HTTPException(503, "The local vision model could not complete the check. Confirm Ollama and the model are running.")
+    audit(request, "AI product photo comparison", f"product {pid}: {result['verdict']}")
+    return result
+
+
 @router.delete("/admin-api/products/{pid}")
 def delete_product(pid: int, request: Request, _=Depends(admin_required)):
     image = db.admin_delete_product(pid)
@@ -376,6 +394,7 @@ def _ping(url):
 @router.get("/admin-api/system")
 def system(_=Depends(admin_required)):
     return {"sqlite": True, "postgis": geo.postgis_up(), "cache": cache.backend, "ollama": rag.ollama_up(),
+            "vision": vision.status(),
             "osrm": _ping(f"{config.OSRM_URL}/nearest/v1/driving/77.59,12.97"), "faiss": rag.faiss is not None,
             "index": rag.STATE["meta"], "reference_rows": len(pricing._reference_rows())}
 
@@ -396,7 +415,8 @@ def rag_test(body: QuestionIn, _=Depends(admin_required)):
     """What the assistant would retrieve for a question (no AI model involved)."""
     docs = rag.retrieve(body.question.strip())
     return {"embedder": rag.STATE["meta"].get("embedder"),
-            "results": [{"type": d["type"], "score": d["score"], "text": d["text"]} for d in docs]}
+            "results": [{"type": d["type"], "source": d.get("source", "live catalogue"),
+                         "score": d["score"], "text": d["text"]} for d in docs]}
 
 
 @router.get("/admin-api/price-test")
